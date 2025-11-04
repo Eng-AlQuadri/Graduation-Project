@@ -1,0 +1,52 @@
+<div class="doctors fadeInDown">
+  <div id='edit-message' class="edit-message-overlay">
+
+  </div>
+  <div class="doc-head">
+    <h2>Manage Suppliers</h2>
+    <button class="add-user" (click)="showCreateDialog()">
+      Add New Supplier
+    </button>
+  </div>
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone Number</th>
+              <th>Actions</th>
+          </thead>
+          <tbody class="tbody">
+            @for (supplier of suppliers; track $index) {
+              <tr>
+                <td>{{supplier.id}}</td>
+                <td>{{supplier.userName}}</td>
+                <td>{{supplier.email}}</td>
+                <td>{{supplier.phoneNumber}}</td>
+                <td>
+                  <button type="button" (click)="showUpdateDialog(supplier)">Edit</button>
+                  <p-confirmPopup></p-confirmPopup>
+                  <button type="button" (click)="confirmDelete($event, supplier.id)">Delete</button>
+                  <button type="button" routerLink="{{supplier.id}}">Purchases</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="(userParams.pageNumber - 1) * userParams.pageSize"
+    [rows]="pagination.itemPerPage || 5"
+    [totalRecords]="pagination.totalItems"
+    [showPageLinks]="true"
+    [rowsPerPageOptions]="[5, 10, 20, 30]"
+  />
+</div>
+
+<app-create-supplier-modal (supplierCreated)="createSupplier($event)"></app-create-supplier-modal>
+<app-update-supplier-modal (supplierUpdated)="updateSupplier($event)"></app-update-supplier-modal>

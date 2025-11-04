@@ -1,0 +1,48 @@
+<div class="doctors fadeInDown">
+  <div class="doc-head">
+    <h2>Purchases</h2>
+    <button class="add-user" (click)="showCreateDialog()">
+      Add New Purchase
+    </button>
+  </div>
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>Supplier Name</th>
+              <th>Purchase Id</th>
+              <th>Purchase Time</th>
+              <th>Medicine Name</th>
+              <th>Quantity</th>
+              <th>Total Price</th>
+          </thead>
+          <tbody class="tbody">
+            <tr *ngIf="purchases.length === 0">
+              <td colspan="6">No Purchases</td>
+            </tr>
+            @for (purchase of purchases; track $index) {
+              <tr>
+                <td>{{purchase.supplierName}}</td>
+                <td>{{purchase.id}}</td>
+                <td>{{ purchase.purchaseTime | date:'yyyy-MM-dd HH:mm' }}</td>
+                <td>{{purchase.medicineName}}</td>
+                <td>{{purchase.quantity}}</td>
+                <td>${{purchase.totalPrice}}</td>
+              </tr>
+            }
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="(userParams.pageNumber - 1) * userParams.pageSize"
+    [rows]="pagination.itemPerPage || 5"
+    [totalRecords]="pagination.totalItems"
+    [showPageLinks]="true"
+    [rowsPerPageOptions]="[5, 10, 20, 30]"
+  />
+</div>
+
+<app-create-purchase-modal (purchaseCreated)="createPurchase($event)"></app-create-purchase-modal>

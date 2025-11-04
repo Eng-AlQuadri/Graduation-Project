@@ -1,0 +1,37 @@
+<div class="doctors fadeInDown">
+  <div id='edit-message' class="edit-message-overlay">
+
+  </div>
+  <div class="doc-head">
+    <h2>Patient Invoices</h2>
+  </div>
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>Patient Name</th>
+              <th>Invoice Id</th>
+              <th>Invoice Date</th>
+              <th>Total Price</th>
+              <th>Action</th>
+          </thead>
+          <tbody class="tbody">
+            <tr *ngIf="invoices.length === 0">
+              <td colspan="5">No Invoice For This Patient</td>
+            </tr>
+            @for (invoice of invoices; track $index) {
+              <tr>
+                <td>{{invoice.patientName}}</td>
+                <td>{{invoice.id}}</td>
+                <td>{{invoice.invoiceDate}}</td>
+                <td>${{invoice.totalPrice}}</td>
+                <td>
+                  <button type="button" (click)="showInvoiceDetail(invoice)">Details</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<app-patient-invoice-detail></app-patient-invoice-detail>

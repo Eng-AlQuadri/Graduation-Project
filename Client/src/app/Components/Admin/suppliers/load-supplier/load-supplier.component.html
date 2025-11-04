@@ -1,0 +1,35 @@
+<div class="doctors fadeInDown">
+  <div class="doc-head">
+    <h2>Purchases From Supplier</h2>
+    <button class="add-user" (click)="backPage()">
+      Back
+    </button>
+  </div>
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>Supplier Name</th>
+              <th>Purchase Id</th>
+              <th>Purchase Time</th>
+              <th>Medicine Name</th>
+              <th>Quantity</th>
+              <th>Total Price</th>
+          </thead>
+          <tbody class="tbody">
+            <tr *ngIf="purchases.length === 0">
+              <td colspan="6">No Purchases From This Supplier</td>
+            </tr>
+            @for (purchase of purchases; track $index) {
+              <tr>
+                <td>{{purchase.supplierName}}</td>
+                <td>{{purchase.id}}</td>
+                <td>{{purchase.purchaseTime}}</td>
+                <td>{{purchase.medicineName}}</td>
+                <td>{{purchase.quantity}}</td>
+                <td>${{purchase.totalPrice}}</td>
+              </tr>
+            }
+          </tbody>
+      </table>
+  </div>
+</div>

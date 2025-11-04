@@ -1,0 +1,125 @@
+.signup-section {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup-section form {
+  padding: 15px;
+  border-radius: 15px;
+  border: 2px solid teal;
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  max-width: 350px;
+  margin: 0 auto;
+  color: teal;
+  box-shadow: 0 6px 10px #c0c0c0;
+}
+
+.signup-section form h2 {
+  text-align: center;
+}
+
+.signup-section form .field {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.signup-section form .field input {
+  padding: 5px;
+  border: 1px solid teal;
+  caret-color: teal;
+  border-radius: 8px;
+  outline: none;
+}
+
+#choose-btn {
+  padding: 4px 8px;
+  color: teal;
+  background-color: white;
+  transition: 0.3s;
+  border: 1px solid teal;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#choose-btn:hover {
+  color: white;
+  background-color: teal;
+}
+
+#submit-btn {
+  padding: 6px 8px;
+  color: teal;
+  background-color: white;
+  cursor: pointer;
+  border: 1px solid teal;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+#submit-btn:hover {
+  color: white;
+  background-color: teal;
+}
+
+#submit-btn:active {
+  scale: 0.9;
+}
+
+.question {
+  text-align: center;
+}
+
+.question span {
+  padding: 6px 8px;
+  color: teal;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.question span:hover {
+  color: white;
+  background-color: teal;
+}
+
+.serrors {
+  text-align: center;
+  display: none;
+}
+
+.serrors.show {
+  display: block;
+}
+
+.serrors h3 {
+  background-color: lightcoral;
+  padding: 8px;
+  border-radius: 8px;
+  color: white;
+}
+
+.errors {
+  text-align: center;
+  display: none;
+}
+
+.errors.show {
+  display: block;
+}
+
+.errors h3 {
+  background-color: lightcoral;
+  padding: 8px;
+  border-radius: 8px;
+  color: white;
+}
+

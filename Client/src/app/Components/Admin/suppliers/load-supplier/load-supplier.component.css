@@ -1,0 +1,47 @@
+.table {
+  overflow-x: auto;
+}
+
+table {
+  margin: 20px auto;
+  box-shadow: 0 3px 10px #ccc;
+  text-align: center;
+  width: 100%;
+  /* max-width: 800px; */
+  border-collapse: collapse;
+
+}
+
+table td {
+  background-color: var(--secondary-color);
+  vertical-align: middle !important;
+}
+
+table thead {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+tr:nth-child(even) td {
+  background-color: #cecece;
+}
+
+td,
+th {
+  padding: 8px;
+}
+
+.options button {
+  margin: 5px;
+}
+
+.doc-head {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  color: var(--primary-color);
+}
+
+.loading {
+  text-align: center;
+}

@@ -1,0 +1,54 @@
+<form #editForm="ngForm">
+  <p-dialog header="Create Purchase" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-8">Create Purchase Data</span>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="supplierId" class="font-semibold w-24">Supplier ID</label>
+        <input
+          [(ngModel)]="purchase.supplierId"
+          pInputText id="supplierId"
+          class="flex-auto"
+          autocomplete="off"
+          name="supplierId"
+          required
+          #supplierId="ngModel"
+        />
+    </div>
+    <div *ngIf="supplierId.dirty && supplierId.invalid">
+      <small class="error-info" *ngIf="supplierId.errors?.['required']">* Supplier ID is required</small>
+    </div>
+    <div class="flex items-center gap-4 mb-8">
+        <label for="medicineId" class="font-semibold w-24">Medicine ID</label>
+        <input
+          [(ngModel)]="purchase.medicineId"
+          pInputText id="medicineId"
+          class="flex-auto"
+          autocomplete="off"
+          name="medicineId"
+          required
+          #medicineId="ngModel"
+        />
+    </div>
+    <div *ngIf="medicineId.dirty && medicineId.invalid">
+      <small class="error-info" *ngIf="medicineId.errors?.['required']">* Medicine ID is required</small>
+    </div>
+    <div class="flex items-center gap-4 mb-8">
+        <label for="quantity" class="font-semibold w-24">Quantity</label>
+        <input
+          [(ngModel)]="purchase.quantity"
+          pInputText id="quantity"
+          class="flex-auto"
+          autocomplete="off"
+          name="quantity"
+          required
+          #quantity="ngModel"
+        />
+    </div>
+    <div *ngIf="quantity.dirty && quantity.invalid">
+      <small class="error-info" *ngIf="quantity.errors?.['required']">* Quantity is required</small>
+    </div>
+    <div class="flex justify-end gap-2">
+        <p-button label="Cancel" severity="secondary" (click)="closeDialog()" />
+        <p-button label="Save" [disabled]="editForm.invalid || !editForm.dirty" (click)="createPurchase()" />
+    </div>
+  </p-dialog>
+</form>

@@ -1,0 +1,50 @@
+<div class="doctors fadeInDown">
+  <div id='edit-message' class="edit-message-overlay">
+
+  </div>
+  <div class="doc-head">
+      <h2>Manage Patients</h2>
+      <button class="add-user" (click)="showCreateDialog()">
+        Add New Patient
+    </button>
+  </div>
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone Number</th>
+              <th>Actions</th>
+          </thead>
+          <tbody class="tbody">
+            @for (patient of patients; track $index) {
+              <tr>
+                <td>{{patient.userName}}</td>
+                <td>{{patient.email}}</td>
+                <td>{{patient.phoneNumber}}</td>
+                <td>
+                  <button type="button" (click)="showUpdateDialog(patient)">Edit</button>
+                  <p-confirmPopup></p-confirmPopup>
+                  <button type="button" (click)="confirmDelete($event, patient.id)">Delete</button>
+                  <button type="button" routerLink="{{patient.id}}">Invoices</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="(userParams.pageNumber - 1) * userParams.pageSize"
+    [rows]="pagination.itemPerPage || 5"
+    [totalRecords]="pagination.totalItems"
+    [showPageLinks]="true"
+    [rowsPerPageOptions]="[5, 10, 20, 30]"
+  />
+</div>
+
+<app-update-patient-modal (patientUpdated)="updatePatient($event)"></app-update-patient-modal>
+<app-create-patient-modal (patientCreated)="createPatient($event)" ></app-create-patient-modal>

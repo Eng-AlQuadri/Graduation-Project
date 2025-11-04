@@ -1,0 +1,32 @@
+<p-dialog header="Invoice Details" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+  <!-- <span class="p-text-secondary block mb-8">Create Patient Data</span> -->
+  <div class="doctors fadeInDown">
+    <div class="table">
+        <table class="animated fadeInDown">
+            <thead>
+                <th>Medicine Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </thead>
+            <tbody class="tbody">
+              @for (detail of invoice.invoiceDetails; track $index) {
+                <tr>
+                  <td>{{detail.medicineName}}</td>
+                  <td>{{detail.quantity}}</td>
+                  <td>${{detail.price}}</td>
+                </tr>
+              }
+            </tbody>
+        </table>
+    </div>
+  </div>
+  <div class="flex justify-end gap-2">
+      <p-button label="Close" severity="secondary" (click)="closeDialog()" />
+  </div>
+</p-dialog>
+
+
+
+
+
+

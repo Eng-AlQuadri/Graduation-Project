@@ -1,0 +1,61 @@
+<div class="doctors fadeInDown">
+  <div id='edit-message' class="edit-message-overlay">
+
+  </div>
+  <div class="doc-head">
+    <h2>Manage Medicines</h2>
+    <button class="add-user" (click)="showCreateDialog()">
+      Add New Medicine
+    </button>
+  </div>
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Packing</th>
+              <th>Stock</th>
+              <th>Supplier Name</th>
+              <th>Expiry Date</th>
+              <th>Actions</th>
+          </thead>
+          <tbody class="tbody">
+            @for (medicine of medicines; track $index) {
+              <tr>
+                <td>{{medicine.name}}</td>
+                <td>${{medicine.price}}</td>
+                <td>{{medicine.packing}}</td>
+                <td>{{medicine.stock}}</td>
+                <td>{{medicine?.supplierName ?? 'No Supplier'}}</td>
+                <td>{{medicine.expiryDate | date:'yyyy-MM-dd'}}</td>
+                <td>
+                  <button type="button" (click)="showUpdateDialog(medicine)" >Edit</button>
+                  <p-confirmPopup></p-confirmPopup>
+                  @if (medicine.supplierId) {
+                    <button type="button" (click)="confirmRemove($event, medicine.id, medicine.supplierId)">Remove Supplier</button>
+                  } @else {
+                    <button type="button" (click)="showAssignDialog(medicine)">Assign Supplier</button>
+                  }
+                  <p-confirmPopup></p-confirmPopup>
+                </td>
+              </tr>
+            }
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="(userParams.pageNumber - 1) * userParams.pageSize"
+    [rows]="pagination.itemPerPage || 5"
+    [totalRecords]="pagination.totalItems"
+    [showPageLinks]="true"
+    [rowsPerPageOptions]="[5, 10, 20, 30]"
+  />
+</div>
+
+<app-update-medicine-modal (medicineUpdated)="updateMedicine($event)"></app-update-medicine-modal>
+<app-create-medicine-modal (medicineCreated)="createMedicine($event)"></app-create-medicine-modal>
+<app-assign-supplier-modal (supplierAssigned)="assignMedicineToSupplier($event)"></app-assign-supplier-modal>

@@ -1,0 +1,76 @@
+.table {
+  overflow-x: auto;
+}
+
+table {
+  margin: 20px auto;
+  box-shadow: 0 3px 10px #ccc;
+  text-align: center;
+  width: 100%;
+  /* max-width: 800px; */
+  border-collapse: collapse;
+
+}
+
+table td {
+  background-color: var(--secondary-color);
+  vertical-align: middle !important;
+}
+
+table thead {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+tr:nth-child(even) td {
+  background-color: #cecece;
+}
+
+td,
+th {
+  padding: 8px;
+}
+
+.options button {
+  margin: 5px;
+}
+
+.doc-head {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  color: var(--primary-color);
+}
+
+.loading {
+  text-align: center;
+}
+
+.gap-2 {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.gap-4 {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.p-dialog-header {
+  padding-bottom: 10px;
+}
+
+span.mb-8 {
+  display: block;
+  margin-bottom: 40px;
+}
+
+.error-info {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 5px;
+  color: red;
+  margin-right: 10px;
+}
