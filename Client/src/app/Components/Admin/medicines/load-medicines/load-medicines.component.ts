@@ -19,6 +19,9 @@ import { AssignSupplierModalComponent } from "../../../../Modals/assign-supplier
 import { AssignSupplierDialogService } from '../../../../Services/assign-supplier-dialog.service';
 import { SuppliersService } from '../../../../Services/suppliers.service';
 import { firstValueFrom } from 'rxjs';
+import { MedicineParams } from '../../../../Models/Interfaces/MedicineParams';
+import { ApiResponse } from '../../../../Models/Interfaces/ApiResponse';
+import { Supplier } from '../../../../Models/Interfaces/Supplier';
 
 @Component({
   selector: 'app-load-medicines',
@@ -40,8 +43,8 @@ import { firstValueFrom } from 'rxjs';
 export class LoadMedicinesComponent implements OnInit {
 
   medicines!: Medicine[];
-  pagination!: Pagination;
-  userParams: UserParams = new UserParams();
+  pagination!: Pagination<Medicine>;
+  medicineParams: MedicineParams = new MedicineParams();
 
   constructor(private medicineService: MedicineService, private toastr: ToastrService,
     private updateMedicineDialog: UpdateMedicineDialogService,
@@ -51,30 +54,33 @@ export class LoadMedicinesComponent implements OnInit {
     private supplierService: SuppliersService
   ) {}
 
+
   async ngOnInit() {
+
     await this.loadMedicines();
   }
 
+
   async loadMedicines() {
 
-    this.medicineService.setUserParams(this.userParams);
+    let response = await firstValueFrom(this.medicineService.getMedicines(this.medicineParams));
 
-    let response = await firstValueFrom(this.medicineService.getMedicines(this.userParams));
+    this.pagination = response.data;
 
-    this.pagination = response.pagination;
-
-    this.medicines = response.result;
+    this.medicines = response.data.items;
   }
+
 
   async createMedicine(newMedicine: Medicine) {
 
-    let response: Medicine = await firstValueFrom(this.medicineService.createMedicine(newMedicine));
+    let response: ApiResponse<Medicine> = await firstValueFrom(this.medicineService.createMedicine(newMedicine));
 
     this.toastr.success("Created Successfully");
 
-    this.medicines.unshift(response);
+    this.medicines.unshift(response.data);
 
   }
+
 
   async updateMedicine(updatedMedicine: Medicine) {
 
@@ -93,17 +99,21 @@ export class LoadMedicinesComponent implements OnInit {
 
   }
 
+
   showUpdateDialog(medicine: Medicine) {
     this.updateMedicineDialog.showDialog(medicine);
   }
+
 
   showCreateDialog() {
     this.createMedicineDialog.showDialog();
   }
 
+
   showAssignDialog(medicine: Medicine) {
     this.assignSupplierDialog.showDialog(medicine);
   }
+
 
   async removeMedicineFromSupplier(medicineId: number, supplierId: number) {
 
@@ -118,18 +128,27 @@ export class LoadMedicinesComponent implements OnInit {
     this.medicines[medicineIndex].supplierId = null!
   }
 
+
   async assignMedicineToSupplier(medicine: Medicine) {
 
-    let supplier = await firstValueFrom(this.supplierService.getSupplier(medicine.supplierId));
+    let supplier: Supplier
+      = (await firstValueFrom(this.supplierService.getSupplier(medicine.supplierId))).data;
 
     let medicineIndex = this.medicines.findIndex(x => x.id == medicine.id);
 
-    await firstValueFrom(this.medicineService.assignSupplierToMedicine(medicine.id, supplier.id));
+    var response = await firstValueFrom(this.medicineService.assignSupplierToMedicine(medicine.id, supplier.id));
 
-    this.medicines[medicineIndex].supplierName = supplier.userName;
+    if (response.statusCode == 200) {
+
+      this.medicines[medicineIndex].supplierName = supplier.userName;
+
+      this.medicines[medicineIndex].supplierId = supplier.id;
+    }
+
 
     this.toastr.success("Assigned successfully");
   }
+
 
   confirmRemove(event: Event, medicineId: number, supplierId: number) {
     this.confirmationService.confirm({
@@ -154,13 +173,12 @@ export class LoadMedicinesComponent implements OnInit {
   });
   }
 
+
   async onPageChange(event: any) {
 
-    this.userParams.pageNumber = event.page + 1;
+    this.medicineParams.pageNumber = event.page + 1;
 
-    this.userParams.pageSize = event?.rows;
-
-    this.medicineService.setUserParams(this.userParams);
+    this.medicineParams.pageSize = event?.rows;
 
     await this.loadMedicines();
   }

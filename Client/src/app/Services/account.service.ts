@@ -1,17 +1,22 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal, Signal } from '@angular/core';
+import { inject, Injectable, signal, Signal } from '@angular/core';
 import { map, Observable, ReplaySubject, tap } from 'rxjs';
 import { User } from '../Models/Interfaces/User';
 import { environment } from '../Environments/environment.development';
 import { loginData } from '../Models/Interfaces/LoginData';
 import { ApiResponse } from '../Models/Interfaces/ApiResponse';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
 
-  constructor(private http: HttpClient) { }
+  constructor() { }
+
+  http: HttpClient = inject(HttpClient);
+
+  toastr: ToastrService = inject(ToastrService);
 
 
   currentUser = signal<User | null>(null);
@@ -47,9 +52,29 @@ export class AccountService {
 
   logout() {
 
-    localStorage.removeItem('pharmacy.user');
+    return this.http.post<ApiResponse<null>>(this.baseUrl + "account/logout", { refreshToken: this.currentUser()?.refreshToken })
+      .pipe(
+        tap(() => {
 
-    this.currentUser.set(null);
+          localStorage.removeItem('pharmacy.user');
+
+          this.currentUser.set(null);
+
+          this.toastr.success("Logged out successfully");
+        })
+      )
+  }
+
+
+  refreshToken() {
+
+    return this.http.post<ApiResponse<User>>(this.baseUrl + "account/refresh", {refreshToken: this.currentUser()?.refreshToken})
+      .pipe(
+        tap((user) => {
+
+          this.setCurrentUser(user.data);
+        })
+      )
   }
 
 
@@ -58,6 +83,8 @@ export class AccountService {
     const role = this.getDecodedToken(user.accessToken).role;
 
     user.role = role;
+
+    localStorage.removeItem('pharmacy.user');
 
     localStorage.setItem('pharmacy.user', JSON.stringify(user));
 

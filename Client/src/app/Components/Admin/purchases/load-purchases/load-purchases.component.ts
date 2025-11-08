@@ -14,6 +14,8 @@ import { PaginatorModule } from 'primeng/paginator';
 import { MedicineService } from '../../../../Services/medicine.service';
 import { firstValueFrom } from 'rxjs';
 import { PaginatedResult } from '../../../../Models/Classes/PaginatedResult';
+import { PurchaseParams } from '../../../../Models/Interfaces/PurchaseParams';
+import { ApiResponse } from '../../../../Models/Interfaces/ApiResponse';
 
 @Component({
   selector: 'app-load-purchases',
@@ -31,9 +33,9 @@ export class LoadPurchasesComponent implements OnInit{
 
   purchases: Purchase[] = []
 
-  pagination!: Pagination;
+  pagination!: Pagination<Purchase>;
 
-  userParams: UserParams = new UserParams();
+  purchaseParams: PurchaseParams = new PurchaseParams();
 
   constructor(private purchaseService: PurchaseService,
     private createPurchaseDialog: CreatePurchaseDialogService,
@@ -48,19 +50,20 @@ export class LoadPurchasesComponent implements OnInit{
 
   async loadPurchases(): Promise<void> {
 
-    let response: PaginatedResult<Purchase[]> = await firstValueFrom(this.purchaseService.getPurchases(this.userParams));
+    let response: ApiResponse<Pagination<Purchase>>
+      = await firstValueFrom(this.purchaseService.getPurchases(this.purchaseParams));
 
-    this.purchases = response.result;
+    this.purchases = response.data.items;
 
-    this.pagination = response.pagination;
+    this.pagination = response.data;
   }
 
 
   async createPurchase(purchase: CreatePurchase) {
 
-    let response: Purchase = await firstValueFrom(this.purchaseService.createPurchase(purchase));
+    let response: ApiResponse<Purchase> = await firstValueFrom(this.purchaseService.createPurchase(purchase));
 
-    this.purchases.unshift(response);
+    this.purchases.unshift(response.data);
 
     this.toastr.success("Created successfully");
   }
@@ -74,9 +77,9 @@ export class LoadPurchasesComponent implements OnInit{
 
   async onPageChange(event: any): Promise<void> {
 
-    this.userParams.pageNumber = event.page + 1;
+    this.purchaseParams.pageNumber = event.page + 1;
 
-    this.userParams.pageSize = event?.rows;
+    this.purchaseParams.pageSize = event?.rows;
 
     await this.loadPurchases();
   }

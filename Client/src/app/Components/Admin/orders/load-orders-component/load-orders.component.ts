@@ -11,6 +11,7 @@ import { ConfirmPopup } from "primeng/confirmpopup";
 import { ConfirmationService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { OrderParams } from '../../../../Models/Interfaces/OrderParams';
 
 @Component({
   selector: 'app-load-orders',
@@ -23,29 +24,32 @@ export class LoadOrdersComponent implements OnInit {
 
   orders: Orders[] = [];
 
-  pagination!: Pagination;
+  pagination!: Pagination<Orders>;
 
-  userParams: UserParams = new UserParams();
+  orderParams: OrderParams = new OrderParams();
 
   constructor(private orderService: OrdersService,
     private toastr: ToastrService,
     private confirmationService: ConfirmationService) {}
+
 
   async ngOnInit() {
 
     await this.loadOrders();
   }
 
+
   async loadOrders() {
 
-    let loadedOrders = await firstValueFrom(this.orderService.getOrders(this.userParams));
+    let response = await firstValueFrom(this.orderService.getOrders(this.orderParams));
 
-    this.orders = loadedOrders.result;
+    this.orders = response.data.items;
 
-    this.pagination = loadedOrders.pagination;
+    this.pagination = response.data;
   }
 
-  async approveOrder(order: Orders){
+
+  async approveOrder(order: Orders) {
 
     await firstValueFrom(this.orderService.changeOrderStatus(order, true));
 
@@ -55,9 +59,9 @@ export class LoadOrdersComponent implements OnInit {
 
   async onPageChange(event: any) {
 
-    this.userParams.pageNumber = event.page + 1;
+    this.orderParams.pageNumber = event.page + 1;
 
-    this.userParams.pageSize = event?.rows;
+    this.orderParams.pageSize = event?.rows;
 
     await this.loadOrders();
   }

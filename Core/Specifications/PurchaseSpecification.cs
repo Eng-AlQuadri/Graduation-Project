@@ -13,6 +13,10 @@ public class PurchaseSpecification : BaseSpecefication<Purchase>
     {
         var spec = new PurchaseSpecification();
 
+        spec.AddInclude(x => x.Medicine);
+
+        spec.AddInclude(x => x.Supplier.AppUser);
+
         spec.ApplyPaging(purchaseSpecParams.PageSize * (purchaseSpecParams.PageIndex - 1), purchaseSpecParams.PageSize);
 
         return spec;

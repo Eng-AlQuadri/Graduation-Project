@@ -42,6 +42,14 @@ public class Seeder
             await userManager.CreateAsync(user,"Pa$$w0rd");
 
             await userManager.AddToRoleAsync(user, "Patient");
+
+            var patientUser = new PatientUser
+            {
+                Id = user.Id,
+                AppUserId = user.Id
+            };
+
+            unitOfWork.Repository<PatientUser>().Add(patientUser);
         }
 
         var adminAppUser = new AppUser

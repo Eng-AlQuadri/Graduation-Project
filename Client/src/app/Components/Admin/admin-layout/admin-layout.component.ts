@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService } from '../../../Services/account.service';
 import { Router, RouterModule } from '@angular/router';
-import { take } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -23,10 +23,12 @@ export class AdminLayoutComponent implements OnInit {
 
   constructor(private accountService: AccountService, private router: Router) {}
 
+
   isAsideOpen: boolean = false;
   isPageContentOpen: boolean = true;
 
   currentUser!: User | null;
+
 
   handleIconClick() {
 
@@ -50,9 +52,9 @@ export class AdminLayoutComponent implements OnInit {
     this.getPageConfig();
   }
 
-  logout(): void {
+  async logout(): Promise<void> {
 
-    this.accountService.logout();
+    await firstValueFrom(this.accountService.logout());
 
     this.router.navigateByUrl('/login');
   }

@@ -51,7 +51,9 @@ public class PatientService : BaseService, IPatientService
 
         var patient = new PatientUser
         {
-            AppUserId = user.Id
+            AppUserId = user.Id,
+            Id = user.Id,
+            AppUser = user
         };
 
         _unitOfWork.Repository<PatientUser>().Add(patient);
@@ -59,7 +61,7 @@ public class PatientService : BaseService, IPatientService
         var saved = await _unitOfWork.Complete();
 
         return saved
-            ? Response(true, 201, null, user)
+            ? Response(true, 201, null, _mapper.Map<PatientDto>(patient))
             : Response(false, 500, "Internal Server Error", null);
     }
 
@@ -75,13 +77,7 @@ public class PatientService : BaseService, IPatientService
 
         if (!result.Succeeded) return Response(false, 400, "Cannot delete patient, may be he have related records");
 
-        _unitOfWork.Repository<PatientUser>().Remove(patient);
-
-        var saved = await _unitOfWork.Complete();
-
-        return saved
-            ? Response(true, 200, null, null)
-            : Response(false, 500, "Internal Server Error");
+        return Response(true, 200, null, null);
     }
 
 

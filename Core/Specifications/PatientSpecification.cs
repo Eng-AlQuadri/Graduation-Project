@@ -22,6 +22,8 @@ public class PatientSpecification : BaseSpecefication<PatientUser>
     {
         var spec = new PatientSpecification();
 
+        spec.AddInclude(x => x.AppUser);
+
         spec.ApplyPaging(patientSpecParams.PageSize * (patientSpecParams.PageIndex - 1), patientSpecParams.PageSize);
 
         return spec;

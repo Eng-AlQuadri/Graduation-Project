@@ -48,9 +48,9 @@
 <div class="d-flex justify-content-center" *ngIf="pagination">
   <p-paginator
     (onPageChange)="onPageChange($event)"
-    [first]="(userParams.pageNumber - 1) * userParams.pageSize"
-    [rows]="pagination.itemPerPage || 5"
-    [totalRecords]="pagination.totalItems"
+    [first]="(medicineParams.pageNumber - 1) * medicineParams.pageSize"
+    [rows]="medicineParams.pageSize || 5"
+    [totalRecords]="pagination.count"
     [showPageLinks]="true"
     [rowsPerPageOptions]="[5, 10, 20, 30]"
   />

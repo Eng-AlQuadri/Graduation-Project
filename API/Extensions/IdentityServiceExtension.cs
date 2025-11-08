@@ -16,6 +16,7 @@ public static class IdentityServiceExtension
             .AddIdentityCore<AppUser>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
             })
             .AddRoles<AppRole>()
             .AddRoleManager<RoleManager<AppRole>>()
@@ -39,8 +40,10 @@ public static class IdentityServiceExtension
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtConfig:Key"]!)),
                     ValidateIssuer = true,
                     ValidateAudience = true,
+                    RequireExpirationTime = true,
                     ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true
+                    ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero
                 };
 
                 options.Events = new JwtBearerEvents
@@ -65,7 +68,7 @@ public static class IdentityServiceExtension
         services
             .AddAuthorizationBuilder()
             .AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"))
-            .AddPolicy("RequirePatientRole", policy => policy.RequireRole("Patient"))
+            .AddPolicy("RequirePatientRole", policy => policy.RequireRole(["Patient", "Admin"]))
             .AddPolicy("RequireDeliveryRole", policy => policy.RequireRole("Delivery"));
 
         return services;

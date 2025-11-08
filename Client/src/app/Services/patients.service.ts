@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../Environments/environment.development';
 import { Patient } from '../Models/Interfaces/Patient';
 import { UserParams } from '../Models/Classes/UserParams';
@@ -10,58 +10,70 @@ import { AccountService } from './account.service';
 import { PatientDetail } from '../Models/Interfaces/PatientDetail';
 import { UpdatePatient } from '../Models/Interfaces/UpdatePatient';
 import { Invoice } from '../Models/Interfaces/Invoice';
+import { PatientParams } from '../Models/Interfaces/PatientParams';
+import { ApiResponse } from '../Models/Interfaces/ApiResponse';
+import { Pagination } from '../Models/Interfaces/Pagination';
+import { InvoiceParams } from '../Models/Interfaces/InvoiceParams';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PatientsService {
 
-  userParams: UserParams;
 
   baseUrl: string = environment.API_URL;
 
-  constructor(private http: HttpClient) {
-    this.userParams = new UserParams();
+
+  http: HttpClient = inject(HttpClient);
+
+
+  constructor() {}
+
+
+  getPatients(patientParams: PatientParams): Observable<ApiResponse<Pagination<Patient>>> {
+
+    let params = this.buildParams(patientParams);
+
+    return this.http.get<ApiResponse<Pagination<Patient>>>(this.baseUrl + 'patient', {params});
   }
 
 
-  getPatients(userParams: UserParams): Observable<PaginatedResult<Patient[]>> {
+  getPatientInvoices(id: number, invoiceParams: InvoiceParams)  {
 
-    let params = getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
+    let params = this.buildParams(invoiceParams);
 
-    return getPaginatedResult<Patient[]>(this.baseUrl + 'patient', params, this.http);
+    return this.http.get<ApiResponse<Pagination<Invoice>>>(this.baseUrl + 'invoice/patient/' + id, {params});
   }
 
-  getPatientInvoices(id: number) : Observable<Invoice> {
 
-    return this.http.get<Invoice>(this.baseUrl + 'invoice/patient/' + id);
+  createPatient(newPatient: Patient): Observable<ApiResponse<Patient>> {
+
+    return this.http.post<ApiResponse<Patient>>(this.baseUrl + 'patient', newPatient);
   }
 
-  createPatient(newPatient: Patient): Observable<Patient> {
 
-    return this.http.post<Patient>(this.baseUrl + 'patient', newPatient);
+  updatePatient(upatient: UpdatePatient): Observable<ApiResponse<null>> {
+
+    return this.http.put<ApiResponse<null>>(this.baseUrl + 'patient', upatient);
   }
 
-  updatePatient(upatient: UpdatePatient): Observable<UpdatePatient> {
 
-    return this.http.put<UpdatePatient>(this.baseUrl + 'patient', upatient);
+  deletePatient(id: number): Observable<ApiResponse<null>> {
+
+    return this.http.delete<ApiResponse<null>>(this.baseUrl + 'patient/' + id);
   }
 
-  deletePatient(id: number): Observable<void> {
 
-    return this.http.delete<void>(this.baseUrl + 'patient/' + id);
-  }
+  private buildParams(p: { search?: string; sort?: string; pageSize: number; pageNumber: number }): HttpParams {
 
-  setUserParams(params: UserParams): void {
-    this.userParams = params;
-  }
+    let params = new HttpParams();
 
-  getUserParams(): UserParams {
-    return this.userParams;
-  }
+    if (p.search) params = params.set('search', p.search);
 
-  resetUserParams(): UserParams {
-    this.userParams = new UserParams();
-    return this.userParams
+    if (p.sort) params = params.set('sort', p.sort);
+
+    return params
+      .set('pageSize', p.pageSize)
+      .set('pageIndex', p.pageNumber);
   }
 }

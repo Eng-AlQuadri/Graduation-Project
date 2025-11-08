@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../Environments/environment.development';
@@ -8,73 +8,77 @@ import { getPaginationHeaders, getPaginatedResult } from './PaginationHelper';
 import { Supplier } from '../Models/Interfaces/Supplier';
 import { Purchase } from '../Models/Interfaces/Purchase';
 import { UpdateSupplier } from '../Models/Interfaces/UpdateSupplier';
+import { SupplierParams } from '../Models/Interfaces/SupplierParams';
+import { ApiResponse } from '../Models/Interfaces/ApiResponse';
+import { Pagination } from '../Models/Interfaces/Pagination';
+import { PurchaseParams } from '../Models/Interfaces/PurchaseParams';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SuppliersService {
 
-  userParams: UserParams;
+  supplierParams: SupplierParams;
 
   baseUrl: string = environment.API_URL;
 
   supplierCache!: Supplier[];
 
   constructor(private http: HttpClient) {
-    this.userParams = new UserParams();
+    this.supplierParams = new SupplierParams();
   }
 
 
-  getSuppliers(userParams: UserParams): Observable<PaginatedResult<Supplier[]>> {
+  getSuppliers(supplierParams: SupplierParams): Observable<ApiResponse<Pagination<Supplier>>> {
 
-    let params = getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
+    let params = this.buildParams(supplierParams);
 
-    return getPaginatedResult<Supplier[]>(this.baseUrl + 'supplier', params, this.http);
+    return this.http.get<ApiResponse<Pagination<Supplier>>>(this.baseUrl + 'supplier', {params});
   }
 
 
-  getSupplier(supplierId: number): Observable<Supplier> {
+  getSupplier(supplierId: number): Observable<ApiResponse<Supplier>> {
 
-    return this.http.get<Supplier>(this.baseUrl + 'supplier/' + supplierId);
+    return this.http.get<ApiResponse<Supplier>>(this.baseUrl + 'supplier/' + supplierId);
   }
 
 
-  getSupplierPurchases(id: number) : Observable<Purchase> {
+  getSupplierPurchases(id: number, purchaseParams: PurchaseParams) : Observable<ApiResponse<Pagination<Purchase>>> {
 
-    return this.http.get<Purchase>(this.baseUrl + 'purchase/supplier/' + id);
+    let params = this.buildParams(purchaseParams);
+
+    return this.http.get<ApiResponse<Pagination<Purchase>>>(this.baseUrl + 'purchase/supplier/' + id, {params});
   }
 
 
-  createSupplier(newSupplier: Supplier): Observable<Supplier> {
+  createSupplier(newSupplier: Supplier): Observable<ApiResponse<Supplier>> {
 
-    return this.http.post<Supplier>(this.baseUrl + 'supplier', newSupplier);
+    return this.http.post<ApiResponse<Supplier>>(this.baseUrl + 'supplier', newSupplier);
   }
 
 
-  updateSupplier(usupplier: UpdateSupplier): Observable<UpdateSupplier> {
+  updateSupplier(usupplier: UpdateSupplier): Observable<ApiResponse<null>> {
 
-    return this.http.put<UpdateSupplier>(this.baseUrl + 'supplier', usupplier);
+    return this.http.put<ApiResponse<null>>(this.baseUrl + 'supplier', usupplier);
   }
 
 
-  deleteSupplier(id: number): Observable<void> {
+  deleteSupplier(id: number): Observable<ApiResponse<null>> {
 
-    return this.http.delete<void>(this.baseUrl + 'supplier/' + id);
+    return this.http.delete<ApiResponse<null>>(this.baseUrl + 'supplier/' + id);
   }
 
 
-  setUserParams(params: UserParams): void {
-    this.userParams = params;
-  }
+  private buildParams(p: { search?: string; sort?: string; pageSize: number; pageNumber: number }): HttpParams {
 
+    let params = new HttpParams();
 
-  getUserParams(): UserParams {
-    return this.userParams;
-  }
+    if (p.search) params = params.set('search', p.search);
 
+    if (p.sort) params = params.set('sort', p.sort);
 
-  resetUserParams(): UserParams {
-    this.userParams = new UserParams();
-    return this.userParams
+    return params
+      .set('pageSize', p.pageSize)
+      .set('pageIndex', p.pageNumber);
   }
 }

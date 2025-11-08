@@ -2,7 +2,7 @@ import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } fr
 import { provideRouter } from '@angular/router';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { JwtInterceptor } from './Interceptors/jwt.interceptor';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { ToastrModule } from 'ngx-toastr';
@@ -11,6 +11,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { LoadingInterceptor } from './Interceptors/loading.interceptor';
+import { refreshInterceptor } from './Interceptors/refresh.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers:
@@ -18,7 +19,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([
       errorInterceptor,
       JwtInterceptor,
-      LoadingInterceptor
+      LoadingInterceptor,
+      refreshInterceptor
     ])),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),

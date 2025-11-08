@@ -191,7 +191,7 @@ public class AccountService : BaseService, IAccountService
     {
         return new UserDto
         {
-            Username = user.UserName!,
+            UserName = user.UserName!,
             AccessToken = await _tokenService.GenerateAccessToken(user),
             RefreshToken = await _tokenService.GenerateRefreshToken(user.Id, oldRefreshToken)
         };

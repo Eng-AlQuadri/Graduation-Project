@@ -22,13 +22,16 @@ public class PurchaseService : BaseService, IPurchaseService
 
     public async Task<ApiResponse> CreatePurchase(CreatePurchaseDto createPurchaseDto)
     {
-        var supplier = await _unitOfWork.Repository<SupplierUser>().GetByIdAsync(createPurchaseDto.SupplierId);
+        var supplier = await _unitOfWork.Repository<SupplierUser>()
+            .GetEntityWithSpec(SupplierSpecification.GetSupplierDetails(createPurchaseDto.SupplierId));
 
         if (supplier is null) return Response(false, 400, "Supplier not found", null);
 
         var medicine = await _unitOfWork.Repository<Medicine>().GetByIdAsync(createPurchaseDto.MedicineId);
 
         if (medicine is null) return Response(false, 400, "Medicine not found", null);
+
+        if (!supplier.Medicines.Contains(medicine)) return Response(false, 400, "Supplier does not provide this medicine", null);
 
         var purchase = _mapper.Map<Purchase>(createPurchaseDto);
 

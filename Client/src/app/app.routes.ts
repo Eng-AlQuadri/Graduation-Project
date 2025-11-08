@@ -14,6 +14,8 @@ import { LoadPurchasesComponent } from './Components/Admin/purchases/load-purcha
 import { SupplierLayoutComponent } from './Components/Supplier/supplier-layout/supplier-layout.component';
 import { supplierGuard } from './Guards/supplier.guard';
 import { LoadOrdersComponent } from './Components/Admin/orders/load-orders-component/load-orders.component';
+import { PatientLayoutComponent } from './Components/Patient/patient-layout/patient-layout.component';
+import { patientGuard } from './Guards/patient.guard';
 
 export const routes: Routes =
 [
@@ -71,6 +73,24 @@ export const routes: Routes =
     component: SupplierLayoutComponent,
     runGuardsAndResolvers: 'always',
     canActivate: [supplierGuard]
+  },
+  {
+    path: 'patient',
+    component: PatientLayoutComponent,
+    runGuardsAndResolvers: 'always',
+    canActivate: [patientGuard],
+    // children:
+    // [
+    //   {
+    //     path: '',
+    //     redirectTo: 'orders',
+    //     pathMatch: 'full'
+    //   },
+    //   {
+    //     path: 'orders',
+    //     component: undefined
+    //   },
+    // ]
   },
   {
     path: 'login',

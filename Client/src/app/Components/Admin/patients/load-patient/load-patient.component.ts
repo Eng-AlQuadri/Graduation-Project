@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PatientInvoiceDetailDialogService } from '../../../../Services/patient-invoice-detail-dialog.service';
 import { PatientInvoiceDetailComponent } from "../../../../Modals/patient-invoice-detail/patient-invoice-detail.component";
+import { Patient } from '../../../../Models/Interfaces/Patient';
 
 @Component({
   selector: 'app-load-patient',
@@ -24,7 +25,7 @@ export class LoadPatientComponent implements OnInit {
 
   invoices: Invoice[] = []
   userParams!: UserParams;
-  pagination!: Pagination;
+  pagination!: Pagination<Patient>;
   patientId!: number;
 
   constructor(private router: Router, private route: ActivatedRoute,

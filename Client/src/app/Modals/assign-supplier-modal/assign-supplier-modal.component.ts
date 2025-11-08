@@ -53,8 +53,7 @@ export class AssignSupplierModalComponent implements OnInit {
 
     // Subsicribe to current medicine
     this.assignSupplierDialog.selectedMedicine$.subscribe(medicine => {
-      this.medicine = medicine!;
-      this.initialMedicine = JSON.parse(JSON.stringify(medicine)); // Deep copy for reverting changes
+      this.medicine = JSON.parse(JSON.stringify(medicine));
     })
   }
 

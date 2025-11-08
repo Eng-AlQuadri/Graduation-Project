@@ -16,6 +16,9 @@ import { CreatePatientModalComponent } from "../../../../Modals/create-patient-m
 import { CreatePatientDialogService } from '../../../../Services/create-patient-dialog.service';
 import { PaginatorModule } from 'primeng/paginator';
 import { firstValueFrom } from 'rxjs';
+import { ApiResponse } from '../../../../Models/Interfaces/ApiResponse';
+import { PatientParams } from '../../../../Models/Interfaces/PatientParams';
+import { InvoiceParams } from '../../../../Models/Interfaces/InvoiceParams';
 
 @Component({
   selector: 'app-load-patients',
@@ -35,9 +38,9 @@ import { firstValueFrom } from 'rxjs';
 
 export class LoadPatientsComponent implements OnInit {
 
-  patients!: Patient[];
-  pagination!: Pagination;
-  userParams: UserParams = new UserParams();
+  patients: Patient[] = [];
+  pagination!: Pagination<Patient>;
+  patientParams: PatientParams = new PatientParams();
 
 
   constructor(private patientService: PatientsService, private toastr: ToastrService,
@@ -55,25 +58,26 @@ export class LoadPatientsComponent implements OnInit {
 
   async loadPatients(): Promise<void> {
 
-    let response = await firstValueFrom(this.patientService.getPatients(this.userParams));
+    let response: ApiResponse<Pagination<Patient>>
+      = await firstValueFrom(this.patientService.getPatients(this.patientParams));
 
-    this.pagination = response.pagination;
+    this.pagination = response.data;
 
-    this.patients = response.result;
+    this.patients = response.data.items;
   }
 
 
   async loadPatient(id: number): Promise<void> {
 
-    await firstValueFrom(this.patientService.getPatientInvoices(id));
+    await firstValueFrom(this.patientService.getPatientInvoices(id, new InvoiceParams())); // check later
   }
 
 
   async createPatient(newPatient: Patient): Promise<void> {
 
-    await firstValueFrom(this.patientService.createPatient(newPatient));
+    var response: ApiResponse<Patient> = await firstValueFrom(this.patientService.createPatient(newPatient));
 
-    this.patients.unshift(newPatient);
+    this.patients.unshift(response.data);
 
     this.toastr.success("Created Successfully");
   }
@@ -97,6 +101,8 @@ export class LoadPatientsComponent implements OnInit {
   async deletePatient(id: number): Promise<void> {
 
     await firstValueFrom(this.patientService.deletePatient(id));
+
+    this.patients = this.patients.filter(x => x.id != id);
 
     this.toastr.success("Deleted successfully");
   }
@@ -138,11 +144,9 @@ export class LoadPatientsComponent implements OnInit {
 
   async onPageChange(event: any): Promise<void> {
 
-    this.userParams.pageNumber = event.page + 1;
+    this.patientParams.pageNumber = event.page + 1;
 
-    this.userParams.pageSize = event?.rows;
-
-    this.patientService.setUserParams(this.userParams);
+    this.patientParams.pageSize = event?.rows;
 
     await this.loadPatients();
   }

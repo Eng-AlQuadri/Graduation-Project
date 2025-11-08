@@ -14,6 +14,8 @@ public class MedicineSpecification : BaseSpecefication<Medicine>
     {
         var spec = new MedicineSpecification();
 
+        spec.AddInclude(x => x.Supplier!.AppUser);  // use add select to select specific column, not to load all the entity data
+
         spec.ApplyPaging(medicineSpecParams.PageSize * (medicineSpecParams.PageIndex - 1), medicineSpecParams.PageSize);
 
         return spec;

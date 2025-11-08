@@ -10,7 +10,7 @@ public class BaseService
 {
     public BaseService() { }
 
-    protected async Task<ApiResponse> CreatePagedResult<T>(IGenericRepository<T> repo, 
+    protected async Task<Pagination<T>> CreatePagedResult<T>(IGenericRepository<T> repo, 
         ISpecification<T> spec, int pageIndex, int pageSize) where T : BaseEntity
     {
         var items = await repo.ListAsync(spec);
@@ -18,10 +18,10 @@ public class BaseService
 
         var pagination = new Pagination<T>(pageIndex, pageSize, count, items);
 
-        return Response(true, 200, null, pagination);
+        return pagination;
     }
 
-    protected async Task<ApiResponse> CreatePagedResult<T, TDto>(IGenericRepository<T> repo,
+    protected async Task<Pagination<TDto>> CreatePagedResult<T, TDto>(IGenericRepository<T> repo,
         ISpecification<T> spec, int pageIndex, int pageSize, IMapper mapper)
             where T : BaseEntity
     {
@@ -32,7 +32,7 @@ public class BaseService
 
         var pagination = new Pagination<TDto>(pageIndex, pageSize, count, dtoItems);
 
-        return Response(true, 200, null, pagination);
+        return pagination;
     }
 
     protected ApiResponse Response(bool success, int statusCode, string? message = null, object? data = null)

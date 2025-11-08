@@ -27,7 +27,7 @@ public class PurchaseController : BaseApiController
     }
 
 
-    [Authorize(Policy = "RequireSupplierRole")]
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("supplier/{supplierId}")]
     public async Task<IActionResult> GetPurchasesBySupplier
         (int supplierId, [FromQuery] PurchaseSpecParams purchaseSpecParams)

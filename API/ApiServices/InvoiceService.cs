@@ -74,10 +74,6 @@ public class InvoiceService : BaseService, IInvoiceService
 
     public async Task<ApiResponse> GetInvoicesByPatient(int patientId, InvoiceSpecParams invoiceParams)
     {
-        var authPatientId = _httpContextAccessor.HttpContext!.User.GetUserId();
-
-        if (authPatientId != patientId) return Response(false, 401, "You can't get another patient data", null);
-
         var spec = InvoiceSpecification.GetInvoicesByPatient(patientId, invoiceParams);
 
         var data = await CreatePagedResult<Invoice, InvoiceDto>(_unitOfWork.Repository<Invoice>(), spec,

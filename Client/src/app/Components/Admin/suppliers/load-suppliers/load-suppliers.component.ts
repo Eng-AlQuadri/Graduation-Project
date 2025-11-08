@@ -16,6 +16,9 @@ import { CreateSupplierDialogService } from '../../../../Services/create-supplie
 import { UpdateSupplierModalComponent } from "../../../../Modals/update-supplier-modal/update-supplier-modal.component";
 import { UpdateSupplierDialogService } from '../../../../Services/update-supplier-dialog.service';
 import { firstValueFrom } from 'rxjs';
+import { SupplierParams } from '../../../../Models/Interfaces/SupplierParams';
+import { ApiResponse } from '../../../../Models/Interfaces/ApiResponse';
+import { PurchaseParams } from '../../../../Models/Interfaces/PurchaseParams';
 
 @Component({
   selector: 'app-load-suppliers',
@@ -35,8 +38,8 @@ import { firstValueFrom } from 'rxjs';
 export class LoadSuppliersComponent {
 
   suppliers!: Supplier[];
-  pagination!: Pagination;
-  userParams: UserParams = new UserParams();
+  pagination!: Pagination<Supplier>;
+  supplierParams: SupplierParams = new SupplierParams();
 
   constructor(private supplierService: SuppliersService, private toastr: ToastrService,
     private confirmationService: ConfirmationService,
@@ -63,31 +66,30 @@ export class LoadSuppliersComponent {
 
   async loadSuppliers(): Promise<void> {
 
-    this.supplierService.setUserParams(this.userParams);
+    let response : ApiResponse<Pagination<Supplier>>
+      = await firstValueFrom(this.supplierService.getSuppliers(this.supplierParams));
 
-    let response = await firstValueFrom(this.supplierService.getSuppliers(this.userParams));
+    this.pagination = response.data;
 
-    this.pagination = response.pagination;
+    this.suppliers = response.data.items;
 
-    this.suppliers = response.result;
-
-    this.supplierService.supplierCache = [...response.result];
+    this.supplierService.supplierCache = [...response.data.items];
   }
 
 
   async loadSupplier(id: number): Promise<void> {
 
-    await firstValueFrom(this.supplierService.getSupplierPurchases(id));
+    await firstValueFrom(this.supplierService.getSupplierPurchases(id, new PurchaseParams()));
   }
 
 
   async createSupplier(newSupplier: Supplier): Promise<void> {
 
-    let response: Supplier = await firstValueFrom(this.supplierService.createSupplier(newSupplier));
+    let response: ApiResponse<Supplier> = await firstValueFrom(this.supplierService.createSupplier(newSupplier));
 
-    this.suppliers.unshift(response);
+    this.suppliers.unshift(response.data);
 
-    this.supplierService.supplierCache.unshift(response);
+    this.supplierService.supplierCache.unshift(response.data);
 
     this.toastr.success("Created successfully");
   }
@@ -165,9 +167,11 @@ export class LoadSuppliersComponent {
 
 
   async onPageChange(event: any): Promise<void> {
-    this.userParams.pageNumber = event.page + 1;
-    this.userParams.pageSize = event?.rows;
-    this.supplierService.setUserParams(this.userParams);
+
+    this.supplierParams.pageNumber = event.page + 1;
+
+    this.supplierParams.pageSize = event?.rows;
+
     await this.loadSuppliers();
   }
 }

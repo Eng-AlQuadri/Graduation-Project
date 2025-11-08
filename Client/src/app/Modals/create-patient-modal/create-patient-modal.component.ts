@@ -51,6 +51,7 @@ export class CreatePatientModalComponent implements OnInit {
   createPatient(): void {
     this.patientCreated.emit(this.patient);
     this.createPatientDialog.hideDialog();
+    // this.editForm.reset();
   }
 
 }

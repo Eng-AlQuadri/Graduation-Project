@@ -30,6 +30,8 @@ public class SupplierSpecification : BaseSpecefication<SupplierUser>
     {
         var spec = new SupplierSpecification();
 
+        spec.AddInclude(x => x.AppUser);
+
         spec.ApplyPaging(supplierSpecParams.PageSize * (supplierSpecParams.PageIndex - 1), supplierSpecParams.PageSize);
 
         return spec;

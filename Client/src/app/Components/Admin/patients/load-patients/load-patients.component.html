@@ -17,19 +17,26 @@
               <th>Actions</th>
           </thead>
           <tbody class="tbody">
-            @for (patient of patients; track $index) {
+            @if (patients.length != 0) {
+              @for (patient of patients; track $index) {
+                <tr>
+                  <td>{{patient.userName}}</td>
+                  <td>{{patient.email}}</td>
+                  <td>{{patient.phoneNumber}}</td>
+                  <td>
+                    <button type="button" (click)="showUpdateDialog(patient)">Edit</button>
+                    <p-confirmPopup></p-confirmPopup>
+                    <button type="button" (click)="confirmDelete($event, patient.id)">Delete</button>
+                    <button type="button" routerLink="{{patient.id}}">Invoices</button>
+                  </td>
+                </tr>
+              }
+            } @else {
               <tr>
-                <td>{{patient.userName}}</td>
-                <td>{{patient.email}}</td>
-                <td>{{patient.phoneNumber}}</td>
-                <td>
-                  <button type="button" (click)="showUpdateDialog(patient)">Edit</button>
-                  <p-confirmPopup></p-confirmPopup>
-                  <button type="button" (click)="confirmDelete($event, patient.id)">Delete</button>
-                  <button type="button" routerLink="{{patient.id}}">Invoices</button>
-                </td>
+                <td colspan="4">No Patients</td>
               </tr>
             }
+
           </tbody>
       </table>
   </div>
@@ -38,9 +45,9 @@
 <div class="d-flex justify-content-center" *ngIf="pagination">
   <p-paginator
     (onPageChange)="onPageChange($event)"
-    [first]="(userParams.pageNumber - 1) * userParams.pageSize"
-    [rows]="pagination.itemPerPage || 5"
-    [totalRecords]="pagination.totalItems"
+    [first]="(patientParams.pageNumber - 1) * patientParams.pageSize"
+    [rows]="pagination.pageSize"
+    [totalRecords]="pagination.count"
     [showPageLinks]="true"
     [rowsPerPageOptions]="[5, 10, 20, 30]"
   />
@@ -48,3 +55,4 @@
 
 <app-update-patient-modal (patientUpdated)="updatePatient($event)"></app-update-patient-modal>
 <app-create-patient-modal (patientCreated)="createPatient($event)" ></app-create-patient-modal>
+

@@ -3,6 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { NavigationExtras, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { catchError, Observable, throwError } from "rxjs";
+import { ApiResponse } from "../Models/Interfaces/ApiResponse";
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
@@ -13,7 +14,44 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError(error => {
 
-      if (error) {
+      const apiResponse = error.error as ApiResponse<void>;
+
+      // Check if it's an ApiResponse shape
+      const isApiResponse =
+        apiResponse &&
+        typeof apiResponse === 'object' &&
+        'success' in apiResponse &&
+        'statusCode' in apiResponse &&
+        'message' in apiResponse &&
+        'data' in apiResponse;
+
+      if (isApiResponse) {
+        const { statusCode, message } = apiResponse;
+
+        switch (statusCode) {
+          case 400:
+            toastr.error(message || 'Bad request');
+            break;
+
+          case 401:
+            toastr.error(message || 'Unauthorized');
+            break;
+
+          case 404:
+            router.navigateByUrl('/not-found');
+            break;
+
+          case 500:
+            const navigationExtras: NavigationExtras = { state: { error: apiResponse } };
+            router.navigateByUrl('/server-error', navigationExtras);
+            break;
+
+          default:
+            toastr.error(message || 'Unexpected error occurred');
+            break;
+        }
+
+      } else {
 
         switch(error.status) {
 
@@ -51,7 +89,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
           case 401:
 
-            toastr.error(error.error, error.status);
+            toastr.error("Unauthorized", error.status);
 
             break;
 
