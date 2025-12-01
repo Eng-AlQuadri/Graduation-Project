@@ -82,7 +82,11 @@ export class AccountService {
 
     const role = this.getDecodedToken(user.accessToken).role;
 
+    const userId = this.getDecodedToken(user.accessToken).nameid;
+
     user.role = role;
+
+    user.userId = userId;
 
     localStorage.removeItem('pharmacy.user');
 

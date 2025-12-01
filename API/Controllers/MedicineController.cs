@@ -59,6 +59,16 @@ public class MedicineController : BaseApiController
     }
 
 
+    [Authorize(Policy = "RequirePatientRole")]
+    [HttpGet("all-medicines")]
+    public async Task<IActionResult> GetAllMedicines()
+    {
+        var response = await _medicineService.GetAllMedicines();
+
+        return StatusCode(response.StatusCode, response);
+    }
+
+
     [Authorize(Policy = "RequireAdminRole")]
     [HttpPost]
     public async Task<IActionResult> CreateMedicine(CreateMedicineDto createMedicineDto)

@@ -25,9 +25,11 @@ public class InvoiceSpecification : BaseSpecefication<Invoice>
     {
         var spec = new InvoiceSpecification(x => x.PatientId == patientId);
 
-        spec.AddInclude(x => x.Patient);
+        spec.AddInclude(x => x.Patient.AppUser);
 
         spec.AddInclude(x => x.InvoiceDetails);
+
+        spec.AddInclude("InvoiceDetails.Medicine");
 
         spec.ApplyPaging(specParams.PageSize * (specParams.PageIndex - 1), specParams.PageSize);
 

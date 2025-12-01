@@ -5,7 +5,7 @@ import { Pagination } from '../../../../Models/Interfaces/Pagination';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PatientsService } from '../../../../Services/patients.service';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { PatientInvoiceDetailDialogService } from '../../../../Services/patient-invoice-detail-dialog.service';
 import { PatientInvoiceDetailComponent } from "../../../../Modals/patient-invoice-detail/patient-invoice-detail.component";
 import { Patient } from '../../../../Models/Interfaces/Patient';
@@ -16,7 +16,8 @@ import { Patient } from '../../../../Models/Interfaces/Patient';
   [
     FormsModule,
     CommonModule,
-    PatientInvoiceDetailComponent
+    PatientInvoiceDetailComponent,
+    DatePipe
   ],
   templateUrl: './load-patient.component.html',
   styleUrl: './load-patient.component.css'
@@ -35,12 +36,14 @@ export class LoadPatientComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      this.invoices = data['patient'];
+      this.invoices = data['patient'].data.items;
     })
 
     this.route.params.subscribe(data => {
       this.patientId = data['id'];
     })
+
+    console.log(this.invoices);
   }
 
   showInvoiceDetail(invoice: Invoice) {

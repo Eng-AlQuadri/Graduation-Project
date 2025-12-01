@@ -14,6 +14,8 @@ public static class ApplicationServiceExtension
     {
         services.AddScoped<ITokenService, TokenService>();
 
+        services.AddScoped<FileService>();
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IAccountService, AccountService>();

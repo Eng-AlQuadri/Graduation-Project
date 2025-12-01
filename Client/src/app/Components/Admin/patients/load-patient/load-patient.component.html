@@ -22,7 +22,7 @@
               <tr>
                 <td>{{invoice.patientName}}</td>
                 <td>{{invoice.id}}</td>
-                <td>{{invoice.invoiceDate}}</td>
+                <td>{{invoice.invoiceDate | date: 'yyyy-MM-dd HH:mm'}}</td>
                 <td>${{invoice.totalPrice}}</td>
                 <td>
                   <button type="button" (click)="showInvoiceDetail(invoice)">Details</button>

@@ -6,6 +6,7 @@ namespace Core.Interfaces;
 public interface IMedicineService
 {
     public Task<ApiResponse> GetMedicines(MedicineSpecParams medicineSpecParams);
+    public Task<ApiResponse> GetAllMedicines();
     public Task<ApiResponse> GetMedicineById(int medicineId);
     public Task<ApiResponse> GetMedicineByName(string medicineName);
     public Task<ApiResponse> GetMedicinesBySupplier(int supplierId, MedicineSpecParams medicineSpecParams);

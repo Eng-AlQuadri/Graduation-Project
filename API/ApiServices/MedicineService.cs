@@ -69,6 +69,15 @@ public class MedicineService : BaseService, IMedicineService
             : Response(false, 500, "Internal server error", null);
     }
 
+    public async Task<ApiResponse> GetAllMedicines()
+    {
+        var medicinesSpec = MedicineSpecificationSelection.GetAllMedicines();
+
+        var medicines = await _unitOfWork.Repository<Medicine>().ListAsync(medicinesSpec);
+
+        return Response(true, 200, null, medicines);
+    }
+
     public async Task<ApiResponse> GetMedicineById(int medicineId)
     {
         var medicine = await _unitOfWork.Repository<Medicine>().GetByIdAsync(medicineId);

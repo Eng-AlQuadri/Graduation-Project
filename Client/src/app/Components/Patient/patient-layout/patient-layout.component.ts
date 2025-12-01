@@ -43,8 +43,6 @@ export class PatientLayoutComponent {
 
   ngOnInit(): void {
 
-    console.log('Signal value:', this.accountService.currentUser());
-    console.log('Signal value:', this.accountService.currentUser()?.userName);
     this.currentUser = this.accountService.currentUser();
 
     if (this.currentUser?.role !== 'Patient' || !this.currentUser)

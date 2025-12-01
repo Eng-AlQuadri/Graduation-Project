@@ -3,11 +3,12 @@ export interface Orders {
   orderDate: Date;
   patientId: number;
   patientName: string;
-  homeLocation: string;
-  patientPhoneNumber: string;
+  address: string;
+  phoneNumber: string;
   approved?: boolean;
-  approvedTime?: Date;
+  approvalTime?: Date;
   prescriptionUrl: string;
+  totalPrice: number;
   orderDetails: OrderDetails[];
 }
 
@@ -15,7 +16,7 @@ export interface OrderDetails {
   orderId: number;
   medicineId: number;
   medicineName: string;
-  medicineQuantity: number;
+  quantity: number;
   unitPrice: number;
   totalPrice: number;
 }

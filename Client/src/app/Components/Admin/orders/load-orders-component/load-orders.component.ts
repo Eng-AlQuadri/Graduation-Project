@@ -9,13 +9,15 @@ import { firstValueFrom } from 'rxjs';
 import { Paginator } from "primeng/paginator";
 import { ConfirmPopup } from "primeng/confirmpopup";
 import { ConfirmationService } from 'primeng/api';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OrderParams } from '../../../../Models/Interfaces/OrderParams';
+import { environment } from '../../../../Environments/environment.development';
+import { Dialog } from 'primeng/dialog';
 
 @Component({
   selector: 'app-load-orders',
-  imports: [Paginator, ConfirmPopup, CommonModule, FormsModule],
+  imports: [Paginator, ConfirmPopup, CommonModule, FormsModule, DatePipe, Dialog],
   templateUrl: './load-orders.component.html',
   styleUrl: './load-orders.component.css',
   providers: [ConfirmationService]
@@ -27,6 +29,10 @@ export class LoadOrdersComponent implements OnInit {
   pagination!: Pagination<Orders>;
 
   orderParams: OrderParams = new OrderParams();
+
+  detailsVisible: boolean = false;
+
+  requiredOrder: number = 0;
 
   constructor(private orderService: OrdersService,
     private toastr: ToastrService,
@@ -51,7 +57,7 @@ export class LoadOrdersComponent implements OnInit {
 
   async approveOrder(order: Orders) {
 
-    await firstValueFrom(this.orderService.changeOrderStatus(order, true));
+    await firstValueFrom(this.orderService.approveOrder(order.id));
 
     this.toastr.info("Order is approved");
   }
@@ -88,5 +94,20 @@ export class LoadOrdersComponent implements OnInit {
       }
     });
   }
+
+
+  loadPrescription(prescriptionUrl: string) {
+
+    window.open(environment.FILE_URL + prescriptionUrl, '_blank');
+  }
+
+
+    ShowDetails(orderId: number) {
+
+    this.requiredOrder = orderId;
+
+    this.detailsVisible = !this.detailsVisible;
+  }
+
 
 }

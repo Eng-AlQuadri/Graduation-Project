@@ -10,6 +10,7 @@ import { UpdateMedicine } from "../Models/Interfaces/UpdateMedicine";
 import { MedicineParams } from "../Models/Interfaces/MedicineParams";
 import { ApiResponse } from "../Models/Interfaces/ApiResponse";
 import { Pagination } from "../Models/Interfaces/Pagination";
+import { MedicineSelection } from "../Models/Interfaces/MedicineSelection";
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,12 @@ export class MedicineService {
     let params = this.buildParams(medicineParams);
 
     return this.http.get<ApiResponse<Pagination<Medicine>>>(this.baseUrl + 'medicine', {params});
+  }
+
+
+  getAllMedicines(): Observable<ApiResponse<MedicineSelection[]>> {
+
+    return this.http.get<ApiResponse<MedicineSelection[]>>(this.baseUrl + 'medicine/all-medicines');
   }
 
 

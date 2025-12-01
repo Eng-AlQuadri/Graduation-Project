@@ -10,6 +10,7 @@
               <th>Order Date</th>
               <th>Approved Time</th>
               <th>Prescription</th>
+              <th>Details</th>
               <th>Actions</th>
           </thead>
           <tbody class="tbody">
@@ -18,14 +19,19 @@
                 <tr>
                   <td>{{order.id}}</td>
                   <td>{{order.patientName}}</td>
-                  <td>{{order.orderDate}}</td>
-                  <td>{{order.approvedTime ? order.approvedTime : "Not Approved"}}</td>
-                  <td>{{order.prescriptionUrl}}</td>
+                  <td>{{order.orderDate | date:'yyyy-MM-dd'}}</td>
+                  <td>{{order.approvalTime ? (order.approvalTime | date:'yyyy-MM-dd HH:mm') : "Not Approved"}}</td>
+                  <td><button type="button" (click)="loadPrescription(order.prescriptionUrl)">Prescription</button></td>
+                  <td>
+                    <button type="button" (click)="ShowDetails(order.id)">Details</button>
+                  </td>
                   @if (!order.approved) {
                     <td>
                       <button type="button" (click)="confirmApproval($event, order)">Approve</button>
                       <p-confirmPopup></p-confirmPopup>
                     </td>
+                  } @else{
+                    <td>-</td>
                   }
                 </tr>
               }
@@ -49,3 +55,44 @@
     [rowsPerPageOptions]="[5, 10, 20, 30]"
   />
 </div>
+
+
+
+<p-dialog header="Details" [modal]="true" [(visible)]="detailsVisible" [style]="{ width: '50rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>Medicine Name</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
+              <th>Total Price</th>
+          </thead>
+          <tbody class="tbody">
+            @if (orders.length != 0) {
+              @for (order of orders; track $index) {
+                @if (order.id == requiredOrder){
+                  @for (item of order.orderDetails; track $index) {
+                    <tr>
+                      <td>{{item.medicineName}}</td>
+                      <td>{{item.quantity}}</td>
+                      <td>${{item.unitPrice}}</td>
+                      <td>${{item.totalPrice}}</td>
+                    </tr>
+                  }
+                }
+
+              }
+            } @else {
+              <tr>
+                <td colspan="4">No Orders</td>
+              </tr>
+            }
+
+          </tbody>
+      </table>
+  </div>
+  <div class="button-holder">
+    <button type="button" (click)="ShowDetails(0)">Close</button>
+  </div>
+</p-dialog>
+

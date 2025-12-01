@@ -15,6 +15,40 @@ public class OrderSpecification : BaseSpecefication<Order>
 
         spec.ApplyPaging(orderSpecParams.PageSize * (orderSpecParams.PageIndex - 1), orderSpecParams.PageSize);
 
+        spec.AddInclude(x => x.OrderDetails);
+
+        spec.AddInclude("OrderDetails.Medicine");
+
+        spec.AddInclude(x => x.Patient.AppUser);
+
+        return spec;
+    }
+
+    public static OrderSpecification GetOrderById(int orderId)
+    {
+        var spec = new OrderSpecification(x => x.Id == orderId);
+
+        spec.AddInclude(x => x.OrderDetails);
+
+        spec.AddInclude("OrderDetails.Medicine");
+
+        spec.AddInclude(x => x.Patient.AppUser);
+
+        return spec;
+    }
+
+    public static OrderSpecification GetAllOrdersByPatient(OrderSpecParams orderSpecParams, int patientId)
+    { 
+        var spec = new OrderSpecification(x => x.PatientId == patientId);
+
+        spec.ApplyPaging(orderSpecParams.PageSize * (orderSpecParams.PageIndex - 1), orderSpecParams.PageSize);
+
+        spec.AddInclude(x => x.OrderDetails);
+
+        spec.AddInclude("OrderDetails.Medicine");
+
+        spec.AddInclude(x => x.Patient.AppUser);
+
         return spec;
     }
 }

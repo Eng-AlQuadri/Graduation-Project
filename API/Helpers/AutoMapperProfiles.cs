@@ -81,9 +81,10 @@ public class AutoMapperProfiles : Profile
             .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.InvoiceDetails.Sum(x => x.TotalPrice)));
 
         CreateMap<Order, OrderDto>()
-            .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => src.Patient.Id))
+            .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => src.PatientId))
+            .ForMember(dest => dest.PatientName, opt => opt.MapFrom(src => src.Patient.AppUser.UserName))
             .ForMember(dest => dest.OrderDetails, opt => opt.MapFrom(src => src.OrderDetails))
-            .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.OrderDetails.Sum(x => x.UnitPrice)));
+            .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.OrderDetails.Sum(x => x.UnitPrice * x.Quantity)));
 
         CreateMap<OrderDetails, OrderDetailsDto>()
             .ForMember(dest => dest.MedicineName, opt => opt.MapFrom(src => src.Medicine.Name))

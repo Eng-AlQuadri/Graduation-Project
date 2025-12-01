@@ -16,6 +16,8 @@ import { supplierGuard } from './Guards/supplier.guard';
 import { LoadOrdersComponent } from './Components/Admin/orders/load-orders-component/load-orders.component';
 import { PatientLayoutComponent } from './Components/Patient/patient-layout/patient-layout.component';
 import { patientGuard } from './Guards/patient.guard';
+import { OrdersComponent } from './Components/Patient/orders/orders.component';
+import { GetMyOrdersComponent } from './Components/Patient/orders/get-my-orders/get-my-orders.component';
 
 export const routes: Routes =
 [
@@ -29,7 +31,8 @@ export const routes: Routes =
     runGuardsAndResolvers: 'always',
     component: AdminLayoutComponent,
     canActivate: [adminGuard],
-    children:[
+    children:
+    [
       {
         path: '',
         redirectTo: 'patients',
@@ -79,18 +82,22 @@ export const routes: Routes =
     component: PatientLayoutComponent,
     runGuardsAndResolvers: 'always',
     canActivate: [patientGuard],
-    // children:
-    // [
-    //   {
-    //     path: '',
-    //     redirectTo: 'orders',
-    //     pathMatch: 'full'
-    //   },
-    //   {
-    //     path: 'orders',
-    //     component: undefined
-    //   },
-    // ]
+    children:
+    [
+      {
+        path: '',
+        redirectTo: 'orders',
+        pathMatch: 'full'
+      },
+      {
+        path: 'orders',
+        component: OrdersComponent
+      },
+      {
+        path: 'get-my-orders',
+        component: GetMyOrdersComponent
+      },
+    ]
   },
   {
     path: 'login',

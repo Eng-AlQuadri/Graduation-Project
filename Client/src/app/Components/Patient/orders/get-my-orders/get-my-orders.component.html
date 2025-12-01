@@ -1,0 +1,93 @@
+<div class="doctors fadeInDown">
+  <div class="doc-head">
+      <h2>My Orders</h2>
+  </div>
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>ID</th>
+              <th>Order Date</th>
+              <th>Address</th>
+              <th>Approved</th>
+              <th>Approval Time</th>
+              <th>Total Price</th>
+              <th>Prescription</th>
+              <th>Details</th>
+          </thead>
+          <tbody class="tbody">
+            @if (orders.length != 0) {
+              @for (order of orders; track $index) {
+                <tr>
+                  <td>{{order.id}}</td>
+                  <td>{{order.orderDate | date:'yyyy-MM-dd'}}</td>
+                  <td>{{order.address}}</td>
+                  <td>{{order.approved ? "Approved" : "Not Approved"}}</td>
+                  <td>{{order.approvalTime ? (order.approvalTime | date: 'yyyy-mm-dd') : "-"}}</td>
+                  <td>${{order.totalPrice}}</td>
+                  <td><button type="button" (click)="loadPrescription(order.prescriptionUrl)">Prescription</button></td>
+                  <td>
+                    <button type="button" (click)="ShowDetails(order.id)">Details</button>
+                  </td>
+                </tr>
+              }
+            } @else {
+              <tr>
+                <td colspan="8">No Orders</td>
+              </tr>
+            }
+
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="(orderParams.pageNumber - 1) * orderParams.pageSize"
+    [rows]="pagination.pageSize"
+    [totalRecords]="pagination.count"
+    [showPageLinks]="true"
+    [rowsPerPageOptions]="[5, 10, 20, 30]"
+  />
+</div>
+
+
+<p-dialog header="Details" [modal]="true" [(visible)]="detailsVisible" [style]="{ width: '50rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>Medicine Name</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
+              <th>Total Price</th>
+          </thead>
+          <tbody class="tbody">
+            @if (orders.length != 0) {
+              @for (order of orders; track $index) {
+                @if (order.id == requiredOrder){
+                  @for (item of order.orderDetails; track $index) {
+                    <tr>
+                      <td>{{item.medicineName}}</td>
+                      <td>{{item.quantity}}</td>
+                      <td>${{item.unitPrice}}</td>
+                      <td>${{item.totalPrice}}</td>
+                    </tr>
+                  }
+                }
+
+              }
+            } @else {
+              <tr>
+                <td colspan="4">No Orders</td>
+              </tr>
+            }
+
+          </tbody>
+      </table>
+  </div>
+  <div class="button-holder">
+    <button type="button" (click)="ShowDetails(0)">Close</button>
+  </div>
+</p-dialog>
+
