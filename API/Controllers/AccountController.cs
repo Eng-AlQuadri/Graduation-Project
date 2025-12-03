@@ -1,5 +1,6 @@
 using API.Helpers;
 using Core.DTOs;
+using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,17 +32,17 @@ public class AccountController : BaseApiController
     }
 
     [HttpPost("logout")]
-    public async Task<IActionResult> Logout(LogoutDto logoutDto)
+    public async Task<IActionResult> Logout()
     {
-        var response = await _accountService.Logout(logoutDto.RefreshToken);
+        var response = await _accountService.Logout();
 
         return StatusCode(response.StatusCode, response);
     }
 
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh(RefreshDto refreshDto)
+    public async Task<IActionResult> Refresh()
     {
-        var response = await _accountService.Refresh(refreshDto.RefreshToken);
+        var response = await _accountService.Refresh();
 
         return StatusCode(response.StatusCode, response);
     }

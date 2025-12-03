@@ -6,6 +6,6 @@ public interface IAccountService
 {
     public Task<ApiResponse> Login(LoginDto loginDto);
     public Task<ApiResponse> Register(RegisterDto registerDto);
-    public Task<ApiResponse> Refresh(string refreshToken);
-    public Task<ApiResponse> Logout(string refreshToken);
+    public Task<ApiResponse> Refresh();
+    public Task<ApiResponse> Logout();
 }

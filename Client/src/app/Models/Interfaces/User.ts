@@ -3,5 +3,4 @@ export interface User {
   userId: number;
   accessToken: string;
   role: string;
-  refreshToken: string;
 };

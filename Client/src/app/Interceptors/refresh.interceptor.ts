@@ -5,10 +5,13 @@ import { ToastrService } from 'ngx-toastr';
 import { catchError, from, switchMap, throwError } from 'rxjs';
 import { ApiResponse } from '../Models/Interfaces/ApiResponse';
 import { User } from '../Models/Interfaces/User';
+import { Router } from '@angular/router';
 
 export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
 
   const accountService = inject(AccountService);
+
+  const router = inject(Router);
 
   const toastr = inject(ToastrService);
 

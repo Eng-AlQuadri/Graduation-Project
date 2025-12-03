@@ -31,7 +31,7 @@ export class AccountService {
 
   login(data: loginData): Observable<ApiResponse<User>> {
 
-    return this.http.post<ApiResponse<User>>(this.baseUrl + "account/login", data).pipe(
+    return this.http.post<ApiResponse<User>>(this.baseUrl + "account/login", data, { withCredentials: true }).pipe(
 
       map((response: ApiResponse<User>) => {
 
@@ -52,11 +52,11 @@ export class AccountService {
 
   logout() {
 
-    return this.http.post<ApiResponse<null>>(this.baseUrl + "account/logout", { refreshToken: this.currentUser()?.refreshToken })
+    return this.http.post<ApiResponse<null>>(this.baseUrl + "account/logout", {}, { withCredentials: true })
       .pipe(
         tap(() => {
 
-          localStorage.removeItem('pharmacy.user');
+          sessionStorage.removeItem('pharmacy.user');
 
           this.currentUser.set(null);
 
@@ -68,7 +68,7 @@ export class AccountService {
 
   refreshToken() {
 
-    return this.http.post<ApiResponse<User>>(this.baseUrl + "account/refresh", {refreshToken: this.currentUser()?.refreshToken})
+    return this.http.post<ApiResponse<User>>(this.baseUrl + "account/refresh", {}, { withCredentials: true })
       .pipe(
         tap((user) => {
 
@@ -88,9 +88,9 @@ export class AccountService {
 
     user.userId = userId;
 
-    localStorage.removeItem('pharmacy.user');
+    sessionStorage.removeItem('pharmacy.user');
 
-    localStorage.setItem('pharmacy.user', JSON.stringify(user));
+    sessionStorage.setItem('pharmacy.user', JSON.stringify(user));
 
     this.currentUser.set(user);
   }

@@ -41,14 +41,28 @@ public class AccountService : BaseService, IAccountService
 
         var userDto = await CreateUserDto(user);
 
+        var refreshToken = await _tokenService.GenerateRefreshToken(user.Id);
+
+        _httpContextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = false,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddDays(7)
+        });
+
         return Response(true, 200, null, userDto);
     }
 
-    public async Task<ApiResponse> Logout(string refreshToken)
+    public async Task<ApiResponse> Logout()
     {
-        var userId = _httpContextAccessor.HttpContext!.User.GetUserId();
+        var refreshToken = _httpContextAccessor.HttpContext?.Request.Cookies["refreshToken"];
 
-        var token = await GetUserRefreshToken(userId, refreshToken);
+        if (refreshToken is null) return Response(false, 400, "No refresh token", null);
+
+        var refreshTokenDataSpec = RefreshTokenSpecification.GetRefreshTokenDataByToken(refreshToken);
+
+        var token = await _unitOfWork.Repository<RefreshToken>().GetEntityWithSpec(refreshTokenDataSpec);
 
         if (token is null)
         {
@@ -59,13 +73,25 @@ public class AccountService : BaseService, IAccountService
 
         var saved = await _unitOfWork.Complete();
 
+        _httpContextAccessor.HttpContext?.Response.Cookies.Delete("refreshToken", new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = false,
+            SameSite = SameSiteMode.Strict,
+            Path = "/"
+        });
+
         return saved
             ? Response(true, 200, "Logged out successfully", null)
             : Response(false, 500, "Something went wrong", null);        
     }
 
-    public async Task<ApiResponse> Refresh(string refreshToken)
+    public async Task<ApiResponse> Refresh()
     {
+        var refreshToken = _httpContextAccessor.HttpContext?.Request.Cookies["refreshToken"];
+
+        if (refreshToken is null) return Response(false, 400, "No refresh token found");
+
         var storedToken = await GetValidRefreshToken(refreshToken);
 
         if (storedToken is null)
@@ -79,6 +105,16 @@ public class AccountService : BaseService, IAccountService
         }
 
         var userDto = await CreateUserDto(storedToken.User, refreshToken);
+
+        var newRefreshToken = await _tokenService.GenerateRefreshToken(storedToken.UserId, storedToken.RToken);
+
+        _httpContextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", newRefreshToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = false,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddDays(7)
+        });
 
         return Response(true, 200, null, userDto);
     }
@@ -193,7 +229,6 @@ public class AccountService : BaseService, IAccountService
         {
             UserName = user.UserName!,
             AccessToken = await _tokenService.GenerateAccessToken(user),
-            RefreshToken = await _tokenService.GenerateRefreshToken(user.Id, oldRefreshToken)
         };
     }
 }

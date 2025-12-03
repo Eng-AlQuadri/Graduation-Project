@@ -36,9 +36,9 @@ export class AdminLayoutComponent implements OnInit {
 
     this.isPageContentOpen = !this.isPageContentOpen;
 
-    window.localStorage.setItem("AsideOpen", JSON.stringify(this.isAsideOpen));
+    window.sessionStorage.setItem("AsideOpen", JSON.stringify(this.isAsideOpen));
 
-    window.localStorage.setItem("PageContentOpened", JSON.stringify(this.isPageContentOpen));
+    window.sessionStorage.setItem("PageContentOpened", JSON.stringify(this.isPageContentOpen));
   }
 
 
@@ -61,9 +61,9 @@ export class AdminLayoutComponent implements OnInit {
 
   getPageConfig() {
 
-    const asideValue =  window.localStorage.getItem("AsideOpen");
+    const asideValue =  window.sessionStorage.getItem("AsideOpen");
 
-    const pageContentOpened = window.localStorage.getItem("PageContentOpened");
+    const pageContentOpened = window.sessionStorage.getItem("PageContentOpened");
 
     if (asideValue === 'true')
       this.isAsideOpen = true;

@@ -71,11 +71,15 @@ public class TokenService : ITokenService
 
             var oldToken = await _unitOfWork.Repository<RefreshToken>().GetEntityWithSpec(oldTokenSpec);
 
-            if (oldToken is not null) // check also for user ID !! .. Later
+            if (oldToken is not null && oldToken.UserId == userId)
             {
                 oldToken.Revoked = DateTime.UtcNow;
 
                 _unitOfWork.Repository<RefreshToken>().Update(oldToken);
+            }
+            else
+            {
+                throw new Exception("Invalid refresh token or user");
             }
         }
 

@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   }
 
   setCurrentUser() {
-    const jsonUser = localStorage.getItem('pharmacy.user');
+    const jsonUser = sessionStorage.getItem('pharmacy.user');
     if(jsonUser) {
       const user: User = JSON.parse(jsonUser);
       this.accountService.setCurrentUser(user);

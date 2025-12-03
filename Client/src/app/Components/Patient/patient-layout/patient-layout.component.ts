@@ -35,9 +35,9 @@ export class PatientLayoutComponent {
 
     this.isPageContentOpen = !this.isPageContentOpen;
 
-    window.localStorage.setItem("AsideOpen", JSON.stringify(this.isAsideOpen));
+    window.sessionStorage.setItem("AsideOpen", JSON.stringify(this.isAsideOpen));
 
-    window.localStorage.setItem("PageContentOpened", JSON.stringify(this.isPageContentOpen));
+    window.sessionStorage.setItem("PageContentOpened", JSON.stringify(this.isPageContentOpen));
   }
 
 
@@ -60,9 +60,9 @@ export class PatientLayoutComponent {
 
   getPageConfig() {
 
-    const asideValue =  window.localStorage.getItem("AsideOpen");
+    const asideValue =  window.sessionStorage.getItem("AsideOpen");
 
-    const pageContentOpened = window.localStorage.getItem("PageContentOpened");
+    const pageContentOpened = window.sessionStorage.getItem("PageContentOpened");
 
     if (asideValue === 'true')
       this.isAsideOpen = true;
