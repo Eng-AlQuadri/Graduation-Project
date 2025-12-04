@@ -18,7 +18,12 @@ public class AutoMapperProfiles : Profile
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.AppUser.Email))
             .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.AppUser.PhoneNumber))
             .ForMember(dest => dest.Invoices, opt => opt.MapFrom(src => src.Invoices));
-            
+
+        CreateMap<DoctorUser, DoctorDto>()
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.AppUser.UserName))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.AppUser.Email))
+            .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.AppUser.PhoneNumber));
+    
         CreateMap<Invoice, InvoiceDto>();
         CreateMap<SupplierUser, SupplierDto>();
         CreateMap<Medicine, MedicineDto>();
@@ -26,6 +31,10 @@ public class AutoMapperProfiles : Profile
         CreateMap<CreatePatientDto, AppUser>();
         CreateMap<CreatePatientDto, PatientUser>();
         CreateMap<UpdatePatientDto, AppUser>();
+
+        CreateMap<CreateDoctorDto, AppUser>();
+        CreateMap<CreateDoctorDto, PatientUser>();
+        CreateMap<UpdateDoctorDto, AppUser>();
 
         
         CreateMap<AppUserDto, AppUser>();

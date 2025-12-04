@@ -27,7 +27,8 @@ public class Seeder
             new AppRole {Name = "Patient"},
             new AppRole {Name = "Supplier"},
             new AppRole {Name = "Admin"},
-            new AppRole {Name = "Delivery"}
+            new AppRole {Name = "Delivery"},
+            new AppRole {Name = "Doctor"}
         };
 
         foreach (var role in roles)

@@ -18,6 +18,7 @@ import { PatientLayoutComponent } from './Components/Patient/patient-layout/pati
 import { patientGuard } from './Guards/patient.guard';
 import { OrdersComponent } from './Components/Patient/orders/orders.component';
 import { GetMyOrdersComponent } from './Components/Patient/orders/get-my-orders/get-my-orders.component';
+import { DoctorsComponent } from './Components/Admin/doctors/doctors.component';
 
 export const routes: Routes =
 [
@@ -41,6 +42,10 @@ export const routes: Routes =
       {
         path: 'patients',
         component: LoadPatientsComponent
+      },
+      {
+        path: 'doctors',
+        component: DoctorsComponent
       },
       {
         path: 'patients/:id',

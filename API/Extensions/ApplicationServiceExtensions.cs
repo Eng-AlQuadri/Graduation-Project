@@ -28,6 +28,8 @@ public static class ApplicationServiceExtension
 
         services.AddScoped<IOrderService, OrderService>();
 
+        services.AddScoped<IDoctorService, DoctorService>();
+
         services.AddScoped<ISupplierService, SupplierService>();
 
         services.AddScoped<IPurchaseService, PurchaseService>();

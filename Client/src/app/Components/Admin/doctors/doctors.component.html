@@ -1,0 +1,57 @@
+<div class="doctors fadeInDown">
+  <div id='edit-message' class="edit-message-overlay">
+
+  </div>
+  <div class="doc-head">
+      <h2>Manage Doctors</h2>
+      <button class="add-user" (click)="showCreateDialog()">
+        Add New Doctor
+    </button>
+  </div>
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone Number</th>
+              <th>Actions</th>
+          </thead>
+          <tbody class="tbody">
+            @if (doctors.length != 0) {
+              @for (doctor of doctors; track $index) {
+                <tr>
+                  <td>{{doctor.userName}}</td>
+                  <td>{{doctor.email}}</td>
+                  <td>{{doctor.phoneNumber}}</td>
+                  <td>
+                    <button type="button" (click)="showUpdateDialog(doctor)">Edit</button>
+                    <p-confirmPopup></p-confirmPopup>
+                    <button type="button" (click)="confirmDelete($event, doctor.id)">Delete</button>
+                  </td>
+                </tr>
+              }
+            } @else {
+              <tr>
+                <td colspan="4">No Doctors</td>
+              </tr>
+            }
+
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="(doctorParams.pageNumber - 1) * doctorParams.pageSize"
+    [rows]="pagination.pageSize"
+    [totalRecords]="pagination.count"
+    [showPageLinks]="true"
+    [rowsPerPageOptions]="[5, 10, 20, 30]"
+  />
+</div>
+
+<app-update-doctor-modal (doctorUpdated)="updateDoctor($event)"></app-update-doctor-modal>
+<app-create-doctor-modal (doctorCreated)="createDoctor($event)" ></app-create-doctor-modal>
+

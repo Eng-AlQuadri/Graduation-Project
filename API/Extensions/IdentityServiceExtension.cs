@@ -69,6 +69,7 @@ public static class IdentityServiceExtension
             .AddAuthorizationBuilder()
             .AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"))
             .AddPolicy("RequirePatientRole", policy => policy.RequireRole(["Patient", "Admin"]))
+            .AddPolicy("RequirePatientRole", policy => policy.RequireRole(["Doctor", "Admin"]))
             .AddPolicy("RequireDeliveryRole", policy => policy.RequireRole("Delivery"));
 
         return services;
