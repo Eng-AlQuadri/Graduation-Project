@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20251204183523_initialCreate")]
+    [Migration("20251206153346_initialCreate")]
     partial class initialCreate
     {
         /// <inheritdoc />
@@ -156,6 +156,22 @@ namespace Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Core.Entities.DeliveryUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId")
+                        .IsUnique();
+
+                    b.ToTable("Delivery_Workers", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.DoctorUser", b =>
@@ -540,6 +556,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Core.Entities.DeliveryUser", b =>
+                {
+                    b.HasOne("Core.Entities.AppUser", "AppUser")
+                        .WithOne()
+                        .HasForeignKey("Core.Entities.DeliveryUser", "AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("Core.Entities.DoctorUser", b =>

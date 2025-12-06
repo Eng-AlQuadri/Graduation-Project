@@ -99,6 +99,10 @@
   white-space: nowrap;
 }
 
+.defaultLayout .aside ul li {
+  white-space: nowrap;
+}
+
 .defaultLayout .aside ul li a {
   padding: 15px;
 }

@@ -85,7 +85,8 @@ public class DoctorService : BaseService, IDoctorService
 
         if (doctor is null) return Response(false, 400, "Doctor not found");
 
-        return Response(true, 200, null, _mapper.Map<DoctorDto>(doctor));    }
+        return Response(true, 200, null, _mapper.Map<DoctorDto>(doctor));   
+    }
 
     public async Task<ApiResponse> GetDoctors(DoctorSpecParams doctorSpecParams)
     {
@@ -94,7 +95,8 @@ public class DoctorService : BaseService, IDoctorService
         var data = await CreatePagedResult<DoctorUser, DoctorDto>(_unitOfWork.Repository<DoctorUser>(), spec,
             doctorSpecParams.PageIndex, doctorSpecParams.PageSize, _mapper);
 
-        return Response(true, 200, null, data);    }
+        return Response(true, 200, null, data);    
+    }
 
     public Task<ApiResponse> GetMyProfile()
     {
@@ -114,7 +116,8 @@ public class DoctorService : BaseService, IDoctorService
 
         return saved
             ? Response(true, 200, null, null)
-            : Response(false, 500, "Internal Server Error", null);    }
+            : Response(false, 500, "Internal Server Error", null);    
+    }
 
     public async Task<ApiResponse> UpdateMyProfile(UpdateDoctorDto updateDoctorDto)
     {

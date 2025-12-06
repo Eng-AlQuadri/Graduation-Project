@@ -1,0 +1,57 @@
+<div class="doctors fadeInDown">
+  <div id='edit-message' class="edit-message-overlay">
+
+  </div>
+  <div class="doc-head">
+      <h2>Manage Delivery Workers</h2>
+      <button class="add-user" (click)="showCreateDialog()">
+        Add New Delivery Worker
+    </button>
+  </div>
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone Number</th>
+              <th>Actions</th>
+          </thead>
+          <tbody class="tbody">
+            @if (deliveryWorkers.length != 0) {
+              @for (worker of deliveryWorkers; track $index) {
+                <tr>
+                  <td>{{worker.userName}}</td>
+                  <td>{{worker.email}}</td>
+                  <td>{{worker.phoneNumber}}</td>
+                  <td>
+                    <button type="button" (click)="showUpdateDialog(worker)">Edit</button>
+                    <p-confirmPopup></p-confirmPopup>
+                    <button type="button" (click)="confirmDelete($event, worker.id)">Delete</button>
+                  </td>
+                </tr>
+              }
+            } @else {
+              <tr>
+                <td colspan="4">No Delivery Workers</td>
+              </tr>
+            }
+
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="(deliveryWorkerParams.pageNumber - 1) * deliveryWorkerParams.pageSize"
+    [rows]="pagination.pageSize"
+    [totalRecords]="pagination.count"
+    [showPageLinks]="true"
+    [rowsPerPageOptions]="[5, 10, 20, 30]"
+  />
+</div>
+
+<app-update-delivery-worker-modal (deliveryWorkerUpdated)="updateDeliveryWorker($event)"></app-update-delivery-worker-modal>
+<app-create-delivery-worker-modal (deliveryWorkerCreated)="createDeliveryWorker($event)" ></app-create-delivery-worker-modal>
+
