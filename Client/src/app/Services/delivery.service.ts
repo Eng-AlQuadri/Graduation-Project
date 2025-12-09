@@ -31,6 +31,20 @@ export class DeliveryService {
   }
 
 
+  getDeliveriesByWorker(deliveryParams: DeliveryParams) {
+
+    let params = this.buildParams(deliveryParams);
+
+    return this.http.get<ApiResponse<Pagination<Delivery>>>(this.baseUrl + 'delivery/get-deliveries-by-worker', {params});
+  }
+
+
+  completeDelivery(deliveryId: number) {
+
+    return this.http.put<ApiResponse<null>>(this.baseUrl + 'delivery/complete-delivery/' + deliveryId, {});
+  }
+
+
   getDeliveriesByPatient(deliveryParams: DeliveryParams): Observable<ApiResponse<Pagination<Delivery>>> {
 
     let params = this.buildParams(deliveryParams);

@@ -20,7 +20,7 @@
                   <td>{{delivery.deliveryWorkerId}}</td>
                   <td>{{delivery.orderId}}</td>
                   <td>{{delivery.createdAt | date:'yyyy-MM-dd HH:mm' }}</td>
-                  <td>{{delivery.completedAt ? delivery.completedAt : '--'}}</td>
+                  <td>{{delivery.completedAt ? (delivery.completedAt | date:'yyyy-MM-dd HH:mm') : '--'}}</td>
                   <td>{{delivery.status == 0 ? 'In progress' : 'Delivered'}}</td>
                 </tr>
               }

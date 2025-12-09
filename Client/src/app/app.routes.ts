@@ -22,6 +22,9 @@ import { DoctorsComponent } from './Components/Admin/doctors/doctors.component';
 import { DeliveryWorkersComponent } from './Components/Admin/delivery-workers/delivery-workers.component';
 import { DeliveriesComponent as AdminDeliveries } from './Components/Admin/deliveries/deliveries.component';
 import { DeliveriesComponent as PatientDeliveries} from './Components/Patient/deliveries/deliveries.component';
+import { deliveryGuard } from './Guards/delivery.guard';
+import { DeliveryLayoutComponent } from './Components/Delivery/delivery-layout/delivery-layout.component';
+import { LoadDeliveriesComponent } from './Components/Delivery/load-deliveries/load-deliveries.component';
 
 export const routes: Routes =
 [
@@ -116,6 +119,24 @@ export const routes: Routes =
       {
         path: 'deliveries',
         component: PatientDeliveries
+      }
+    ]
+  },
+  {
+    path: 'delivery',
+    runGuardsAndResolvers: 'always',
+    canActivate: [deliveryGuard],
+    component: DeliveryLayoutComponent,
+    children:
+    [
+      {
+        path: '',
+        redirectTo: 'items',
+        pathMatch: 'full'
+      },
+      {
+        path: 'items',
+        component: LoadDeliveriesComponent
       }
     ]
   },

@@ -33,4 +33,24 @@ public class DeliveryController : BaseApiController
 
         return StatusCode(response.StatusCode, response);
     }
+
+
+    [Authorize(Policy = "RequireDeliveryRole")]
+    [HttpGet("get-deliveries-by-worker")]
+    public async Task<IActionResult> GetDeliveriesByWorker([FromQuery] DeliverySpecParams deliverySpecParams)
+    {
+        var response = await _deliveryService.GetDeliveriesByWorker(deliverySpecParams);
+
+        return StatusCode(response.StatusCode, response);
+    }
+
+
+    [Authorize(Policy = "RequireDeliveryRole")]
+    [HttpPut("complete-delivery/{deliveryId}")]
+    public async Task<IActionResult> CompleteDelivery(int deliveryId)
+    {
+        var response = await _deliveryService.ModifyDeliveryStatus(deliveryId);
+
+        return StatusCode(response.StatusCode, response);
+    }
 }

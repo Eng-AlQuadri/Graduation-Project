@@ -7,5 +7,6 @@ public interface IDeliveryService
 {
     public Task<ApiResponse> GetDeliveries(DeliverySpecParams deliverySpecParams);
     public Task<ApiResponse> GetDeliveriesByPatient(DeliverySpecParams deliverySpecParams);
-    public Task<ApiResponse> ModifyDeliveryStatus();
+    public Task<ApiResponse> GetDeliveriesByWorker(DeliverySpecParams deliverySpecParams);
+    public Task<ApiResponse> ModifyDeliveryStatus(int deliveryId);
 }

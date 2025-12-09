@@ -36,4 +36,31 @@ public class DeliverySpecification : BaseSpecefication<Delivery>
 
         return spec;
     }
+
+    public static DeliverySpecification GetAllDeliveriesByWorker(DeliverySpecParams deliverySpecParams, int workerId)
+    {
+        var spec = new DeliverySpecification(x => x.DeliveryWorkerId == workerId);
+
+        spec.AddInclude(x => x.Order);
+
+        spec.AddInclude(x => x.DeliveryWorker);
+
+        spec.ApplyPaging(deliverySpecParams.PageSize * (deliverySpecParams.PageIndex - 1), deliverySpecParams.PageSize);
+
+        return spec;
+    }
+
+
+    public static DeliverySpecification GetDeliveryDataByDeliveryId(int deliveryId)
+    {
+        var spec = new DeliverySpecification(x => x.Id == deliveryId);
+
+        spec.AddInclude(x => x.Order);
+
+        spec.AddInclude(x => x.DeliveryWorker);
+
+        spec.ApplyDistinct();
+
+        return spec;
+    }
 }

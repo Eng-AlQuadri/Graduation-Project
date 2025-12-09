@@ -47,9 +47,35 @@ public class DeliveryService : BaseService, IDeliveryService
         return Response(true, 200, null, data);
     }
 
-
-    public Task<ApiResponse> ModifyDeliveryStatus()
+    public async Task<ApiResponse> GetDeliveriesByWorker(DeliverySpecParams deliverySpecParams)
     {
-        throw new NotImplementedException();
+        var workerId = _httpContextAccessor.HttpContext!.User.GetUserId();
+
+        var spec = DeliverySpecification.GetAllDeliveriesByWorker(deliverySpecParams, workerId);
+
+        var data = await CreatePagedResult<Delivery, DeliveryDto>(_unitOfWork.Repository<Delivery>(), spec,
+            deliverySpecParams.PageIndex, deliverySpecParams.PageSize, _mapper);
+
+        return Response(true, 200, null, data);
+    }
+
+    public async Task<ApiResponse> ModifyDeliveryStatus(int deliveryId)
+    {
+        var delivery = await _unitOfWork.Repository<Delivery>().GetEntityWithSpec(
+            DeliverySpecification.GetDeliveryDataByDeliveryId(deliveryId));
+
+        if (delivery is null) return Response(false, 400, "Delivery not found", null);
+
+        delivery.CompletedAt = DateTime.UtcNow;
+
+        delivery.Status = 1;
+
+        _unitOfWork.Repository<Delivery>().Update(delivery);
+
+        var saved = await _unitOfWork.Complete();
+
+        return saved 
+            ? Response(true, 200, null, null)
+            : Response(false, 500, "Internal Server Error", null);
     }
 }
