@@ -155,6 +155,44 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
+            modelBuilder.Entity("Core.Entities.Delivery", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("DeliveryWorkerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeliveryWorkerId");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Deliveries", (string)null);
+                });
+
             modelBuilder.Entity("Core.Entities.DeliveryUser", b =>
                 {
                     b.Property<int>("Id")
@@ -555,6 +593,31 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Core.Entities.Delivery", b =>
+                {
+                    b.HasOne("Core.Entities.DeliveryUser", "DeliveryWorker")
+                        .WithMany("Deliveries")
+                        .HasForeignKey("DeliveryWorkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Order", "Order")
+                        .WithOne("Delivery")
+                        .HasForeignKey("Core.Entities.Delivery", "OrderId");
+
+                    b.HasOne("Core.Entities.PatientUser", "Patient")
+                        .WithMany("Deliveries")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DeliveryWorker");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("Core.Entities.DeliveryUser", b =>
                 {
                     b.HasOne("Core.Entities.AppUser", "AppUser")
@@ -747,6 +810,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("UserRoles");
                 });
 
+            modelBuilder.Entity("Core.Entities.DeliveryUser", b =>
+                {
+                    b.Navigation("Deliveries");
+                });
+
             modelBuilder.Entity("Core.Entities.Invoice", b =>
                 {
                     b.Navigation("InvoiceDetails");
@@ -763,11 +831,15 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Entities.Order", b =>
                 {
+                    b.Navigation("Delivery");
+
                     b.Navigation("OrderDetails");
                 });
 
             modelBuilder.Entity("Core.Entities.PatientUser", b =>
                 {
+                    b.Navigation("Deliveries");
+
                     b.Navigation("Invoices");
 
                     b.Navigation("Orders");

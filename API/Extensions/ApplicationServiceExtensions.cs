@@ -32,6 +32,8 @@ public static class ApplicationServiceExtension
 
         services.AddScoped<IDoctorService, DoctorService>();
 
+        services.AddScoped<IDeliveryService, DeliveryService>();
+
         services.AddScoped<ISupplierService, SupplierService>();
 
         services.AddScoped<IPurchaseService, PurchaseService>();

@@ -12,12 +12,13 @@ public class DataContext : IdentityDbContext<AppUser, AppRole, int,
 {
     public DataContext(DbContextOptions options) : base(options) { }
 
-    
+
     public DbSet<SupplierUser> Suppliers { get; set; }
     public DbSet<PatientUser> Patients { get; set; }
     public DbSet<DoctorUser> Doctors { get; set; }
     public DbSet<DeliveryUser> DeliveryUsers { get; set; }
     public DbSet<AdminUser> Admins { get; set; }
+    public DbSet<Delivery> Deliveries { get; set; }
     public DbSet<Medicine> Medicines { get; set; }
     public DbSet<Purchase> Purchases { get; set; }
     public DbSet<Invoice> Invoices { get; set; }
@@ -29,7 +30,7 @@ public class DataContext : IdentityDbContext<AppUser, AppRole, int,
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
+
         builder.ApplyConfigurationsFromAssembly(typeof(EntityConfig).Assembly); // Group Call
     }
 }

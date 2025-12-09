@@ -7,4 +7,5 @@ public class PatientUser : BaseEntity
     public AppUser AppUser { get; set; } = null!;
     public ICollection<Order> Orders { get; set; } = [];
     public ICollection<Invoice> Invoices { get; set; } = [];
+    public ICollection<Delivery> Deliveries { get; set; } = [];
 }

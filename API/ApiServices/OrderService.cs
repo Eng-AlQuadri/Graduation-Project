@@ -143,7 +143,6 @@ public class OrderService : BaseService, IOrderService
 
             var invoiceDetail = new InvoiceDetail
             {
-                InvoiceId = invoice.Id,
                 MedicineId = medicine.Id,
                 Quantity = item.Quantity,
                 TotalPrice = medicine.Price * item.Quantity
@@ -156,10 +155,35 @@ public class OrderService : BaseService, IOrderService
 
         _unitOfWork.Repository<Invoice>().Add(invoice);
 
+        var delivery = new Delivery
+        {
+            OrderId = order.Id,
+            PatientId = order.PatientId,
+            DeliveryWorkerId = await AssignToWorker(),
+            CreatedAt = DateTime.UtcNow,
+            Status = 0
+        };
+
+        _unitOfWork.Repository<Delivery>().Add(delivery);
+
         var saved = await _unitOfWork.Complete();
 
         return saved 
             ? Response(true, 200, null, null)
             : Response(false, 500, null, "Internal Server Error");
+    }
+
+
+    private async Task<int> AssignToWorker ()
+    {
+        var workers = await _unitOfWork.Repository<DeliveryUser>().ListAllAsync();
+
+        if (!workers.Any()) throw new Exception("No delivery worker availabel");
+
+        var totalDeliveries = await _unitOfWork.Repository<Delivery>().CountAsync();
+
+        int index = totalDeliveries % workers.Count;
+
+        return workers[index].Id;
     }
 }

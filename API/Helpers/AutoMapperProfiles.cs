@@ -45,6 +45,10 @@ public class AutoMapperProfiles : Profile
         CreateMap<CreateDeliveryWorkerDto, DeliveryUser>();
         CreateMap<UpdateDeliveryWorkerDto, AppUser>();
 
+
+        CreateMap<Delivery, DeliveryDto>()
+            .ForMember(x => x.DeliveryId, opt => opt.MapFrom(src => src.Id));
+
         
         CreateMap<AppUserDto, AppUser>();
 

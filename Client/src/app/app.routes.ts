@@ -20,6 +20,8 @@ import { OrdersComponent } from './Components/Patient/orders/orders.component';
 import { GetMyOrdersComponent } from './Components/Patient/orders/get-my-orders/get-my-orders.component';
 import { DoctorsComponent } from './Components/Admin/doctors/doctors.component';
 import { DeliveryWorkersComponent } from './Components/Admin/delivery-workers/delivery-workers.component';
+import { DeliveriesComponent as AdminDeliveries } from './Components/Admin/deliveries/deliveries.component';
+import { DeliveriesComponent as PatientDeliveries} from './Components/Patient/deliveries/deliveries.component';
 
 export const routes: Routes =
 [
@@ -51,6 +53,10 @@ export const routes: Routes =
       {
         path: 'delivery-worker',
         component: DeliveryWorkersComponent
+      },
+      {
+        path: 'deliveries',
+        component: AdminDeliveries
       },
       {
         path: 'patients/:id',
@@ -107,6 +113,10 @@ export const routes: Routes =
         path: 'get-my-orders',
         component: GetMyOrdersComponent
       },
+      {
+        path: 'deliveries',
+        component: PatientDeliveries
+      }
     ]
   },
   {

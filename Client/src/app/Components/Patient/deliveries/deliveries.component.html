@@ -1,0 +1,47 @@
+<div class="doctors fadeInDown">
+  <div class="doc-head">
+      <h2>Deliveries</h2>
+  </div>
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>ID</th>
+              <th>Worker ID</th>
+              <th>Order ID</th>
+              <th>Created At</th>
+              <th>Completed At</th>
+              <th>Status</th>
+          </thead>
+          <tbody class="tbody">
+            @if (deliveries.length != 0) {
+              @for (delivery of deliveries; track $index) {
+                <tr>
+                  <td>{{delivery.deliveryId}}</td>
+                  <td>{{delivery.deliveryWorkerId}}</td>
+                  <td>{{delivery.orderId}}</td>
+                  <td>{{delivery.createdAt | date:'yyyy-MM-dd HH:mm' }}</td>
+                  <td>{{delivery.completedAt ? delivery.completedAt : '--'}}</td>
+                  <td>{{delivery.status == 0 ? 'In progress' : 'Delivered'}}</td>
+                </tr>
+              }
+            } @else {
+              <tr>
+                <td colspan="6">No Deliveries</td>
+              </tr>
+            }
+
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="(deliveryParams.pageNumber - 1) * deliveryParams.pageSize"
+    [rows]="pagination.pageSize"
+    [totalRecords]="pagination.count"
+    [showPageLinks]="true"
+    [rowsPerPageOptions]="[5, 10, 20, 30]"
+  />
+</div>

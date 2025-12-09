@@ -9,6 +9,7 @@ public interface IGenericRepository<T> where T : BaseEntity
     void Remove(T entity);
     bool Exists(int id);
     Task<int> CountAsync(ISpecification<T> spec);
+    Task<int> CountAsync();
     Task<T?> GetByIdAsync(int id);
     Task<T?> GetEntityWithSpec(ISpecification<T> spec);
     Task<TResult?> GetEntityWithSpec<TResult>(ISpecification<T, TResult> spec);
