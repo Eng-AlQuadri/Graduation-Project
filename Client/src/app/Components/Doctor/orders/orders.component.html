@@ -1,0 +1,106 @@
+<div class="dashboard">
+  <h1>Orders</h1>
+  <div class="card-holder animated fadeInDown">
+      <div class="card" id="addSubject" (click)="openCreateOrderDialog()">
+          <h3>Create Order</h3>
+          <div class="info">
+              <div class="icon">
+                  <i class="fa-solid fa-plus"></i>
+              </div>
+          </div>
+      </div>
+      <div class="card" id="assignSubject" (click)="goToOrdersPage()">
+          <h3>My Orders</h3>
+          <div class="info">
+              <div class="icon">
+                  <i class="fa-solid fa-person-circle-plus"></i>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<form [formGroup]="createOrderForm">
+  <p-dialog header="Create Order" [modal]="true" [(visible)]="CreateOrderDialog" [style]="{ width: '25rem' }">
+      <span class="p-text-secondary block mb-8">Create Order</span>
+
+      <div class="flex items-center gap-4 mb-4">
+          <label for="address" class="font-semibold w-24">Address</label>
+          <input
+            formControlName="address"
+            pInputText id="Address"
+            class="flex-auto"
+            autocomplete="off"
+            name="address"
+            required
+            minlength="3"
+            maxlength="15"
+          />
+      </div>
+
+      <div class="selection">
+        <label>Patient</label>
+        <select formControlName="patientId" id='subjectDropdown' required >
+            <option value="">Select Patient</option>
+            @for (item of patients; track $index) {
+              <option [ngValue]="item.id">{{item.userName}}</option>
+            }
+        </select>
+      </div>
+
+      <p-fileupload
+          #fileUpload
+          name="file"
+          [customUpload]="true"
+          (uploadHandler)="onUpload($event, fileUpload)"
+          [multiple]="false"
+          accept="image/*"
+          maxFileSize="1000000"
+          mode="advanced"
+          class="file-upload"
+      >
+        <ng-template #empty>
+            <div>Upload your prescription</div>
+        </ng-template>
+        <ng-template #content>
+            <ul *ngIf="prescriptionFile">
+                <li>{{ prescriptionFile.name }} - {{ prescriptionFile.size }} bytes</li>
+            </ul>
+        </ng-template>
+      </p-fileupload>
+
+
+      <div *ngIf="createOrderForm.get('address')?.dirty && createOrderForm.get('address')?.invalid">
+        <small class="error-info" *ngIf="createOrderForm.get('address')?.errors?.['required']">* Address is required</small>
+        <small class="error-info" *ngIf="createOrderForm.get('address')?.errors?.['minlength']">* Min length is 3 characters</small>
+        <small class="error-info" *ngIf="createOrderForm.get('address')?.errors?.['maxlength']">* Max length is 15 characters</small>
+      </div>
+
+      <p-button label="Add Medicine" (click)="addItem()"/>
+
+      @if(items.length > 0){
+        <div formArrayName="orderDetails">
+          @for (item of items.controls; track $index) {
+            <div class="inner-holder" [formGroupName]="$index">
+                  <div class="selection">
+                    <label>Medicine:</label>
+                    <select formControlName="medicineId" id='subjectDropdown' required >
+                        <option value="">Select a medicine</option>
+                        @for (item of medicines; track $index) {
+                          <option [ngValue]="item.id">{{item.name}}</option>
+                        }
+                    </select>
+                  </div>
+              <input formControlName="quantity" name="quantity" required placeholder="Quantity" class="flex-auto" pInputText>
+              <p-button label="Remove" (click)="removeItem($index)" />
+            </div>
+            <br>
+          }
+        </div>
+      }
+      <div class="flex justify-end gap-2">
+          <p-button label="Cancel" severity="secondary" (click)="closeDialog()" />
+          <p-button label="Save"  (click)="sendOrder()" />
+      </div>
+    </p-dialog>
+  </form>

@@ -1,0 +1,53 @@
+<div class="doctors fadeInDown">
+  <div class="doc-head">
+    <h2>Manage Insurance Companies</h2>
+    <button class="add-user" (click)="showCreateDialog()">
+      Add New Company
+    </button>
+  </div>
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Discount</th>
+              <th>Actions</th>
+          </thead>
+          <tbody class="tbody">
+            @if (companies.length != 0) {
+              @for (company of companies; track $index) {
+                <tr>
+                  <td>{{company.id}}</td>
+                  <td>{{company.companyName}}</td>
+                  <td>{{company.discount}}%</td>
+                  <td>
+                    <button type="button" (click)="showUpdateDialog(company)" >Edit</button>
+                    <button type="button" (click)="deleteCompany(company.id)" >Delete</button>
+                    <p-confirmPopup></p-confirmPopup>
+                  </td>
+                </tr>
+              }
+            } @else {
+              <tr>
+                <td colspan="4">No Records Found</td>
+              </tr>
+            }
+
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="(companyParams.pageNumber - 1) * companyParams.pageSize"
+    [rows]="companyParams.pageSize || 5"
+    [totalRecords]="pagination.count"
+    [showPageLinks]="true"
+    [rowsPerPageOptions]="[5, 10, 20, 30]"
+  />
+</div>
+
+<app-update-company-modal (companyUpdated)="updateCompany($event)"></app-update-company-modal>
+<app-create-company-modal (companyCreated)="createCompany($event)"></app-create-company-modal>

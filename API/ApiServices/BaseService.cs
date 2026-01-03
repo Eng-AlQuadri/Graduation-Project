@@ -14,6 +14,7 @@ public class BaseService
         ISpecification<T> spec, int pageIndex, int pageSize) where T : BaseEntity
     {
         var items = await repo.ListAsync(spec);
+        
         var count = await repo.CountAsync(spec);
 
         var pagination = new Pagination<T>(pageIndex, pageSize, count, items);
@@ -26,6 +27,7 @@ public class BaseService
             where T : BaseEntity
     {
         var items = await repo.ListAsync(spec);
+
         var count = await repo.CountAsync(spec);
 
         var dtoItems = mapper.Map<List<TDto>>(items);

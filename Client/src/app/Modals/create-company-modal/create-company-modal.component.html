@@ -1,0 +1,43 @@
+<form #editForm="ngForm">
+  <p-dialog header="Add Company" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-8">Create Company information.</span>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="name" class="font-semibold w-24">Name</label>
+        <input
+          [(ngModel)]="company.companyName"
+          pInputText id="name"
+          class="flex-auto"
+          autocomplete="off"
+          name="name"
+          #name="ngModel"
+          required
+          minlength="3"
+          maxlength="15"
+        />
+    </div>
+    <div *ngIf="name.dirty && name.invalid">
+      <small class="error-info" *ngIf="name.errors?.['required']">* Name is required</small>
+      <small class="error-info" *ngIf="name.errors?.['minlength']">* Min length is 3 characters</small>
+      <small class="error-info" *ngIf="name.errors?.['maxlength']">* Max length is 15 characters</small>
+    </div>
+    <div class="flex items-center gap-4 mb-8">
+        <label for="price" class="font-semibold w-24">Discount</label>
+        <input
+          [(ngModel)]="company.discount"
+          pInputText id="price"
+          class="flex-auto"
+          autocomplete="off"
+          name="price"
+          required
+          #discount="ngModel"
+        />
+    </div>
+    <div *ngIf="discount.dirty && discount.invalid">
+      <small class="error-info" *ngIf="discount.errors?.['required']">* Discount is required</small>
+    </div>
+        <div class="flex justify-end gap-2">
+        <p-button label="Cancel" severity="secondary" (click)="closeDialog()" />
+        <p-button label="Save" [disabled]="editForm.invalid || !editForm.dirty" (click)="createCompany()" />
+    </div>
+  </p-dialog>
+</form>

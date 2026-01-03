@@ -29,6 +29,12 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .IsRequired();
 
         builder
+            .HasOne(x => x.Doctor)
+            .WithMany(x => x.Orders)
+            .HasForeignKey(x => x.DoctorId)
+            .IsRequired(false);
+
+        builder
             .ToTable("Orders");
     }
 }

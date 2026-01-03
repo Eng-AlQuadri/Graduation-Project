@@ -28,4 +28,13 @@ public class PatientSpecification : BaseSpecefication<PatientUser>
 
         return spec;
     }
+
+    public static PatientSpecification GetAllPatientsByDoctor()
+    {
+        var spec = new PatientSpecification();
+
+        spec.AddInclude(x => x.AppUser);
+
+        return spec;
+    }
 }

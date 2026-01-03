@@ -16,7 +16,8 @@ import { supplierGuard } from './Guards/supplier.guard';
 import { LoadOrdersComponent } from './Components/Admin/orders/load-orders-component/load-orders.component';
 import { PatientLayoutComponent } from './Components/Patient/patient-layout/patient-layout.component';
 import { patientGuard } from './Guards/patient.guard';
-import { OrdersComponent } from './Components/Patient/orders/orders.component';
+import { OrdersComponent as PatientOrderComponent} from './Components/Patient/orders/orders.component';
+import { OrdersComponent as DoctorOrderComponent} from './Components/Doctor/orders/orders.component';
 import { GetMyOrdersComponent } from './Components/Patient/orders/get-my-orders/get-my-orders.component';
 import { DoctorsComponent } from './Components/Admin/doctors/doctors.component';
 import { DeliveryWorkersComponent } from './Components/Admin/delivery-workers/delivery-workers.component';
@@ -25,6 +26,11 @@ import { DeliveriesComponent as PatientDeliveries} from './Components/Patient/de
 import { deliveryGuard } from './Guards/delivery.guard';
 import { DeliveryLayoutComponent } from './Components/Delivery/delivery-layout/delivery-layout.component';
 import { LoadDeliveriesComponent } from './Components/Delivery/load-deliveries/load-deliveries.component';
+import { doctorGuard } from './Guards/doctor.guard';
+import { DoctorLayoutComponent } from './Components/Doctor/doctor-layout/doctor-layout.component';
+import { InsuranceComponent } from './Components/Patient/insurance/insurance.component';
+import { MyOrdersComponent } from './Components/Doctor/my-orders/my-orders.component';
+import { InsuranceCompaniesComponent } from './Components/Admin/insurance-companies/insurance-companies.component';
 
 export const routes: Routes =
 [
@@ -86,6 +92,10 @@ export const routes: Routes =
       {
         path: 'orders',
         component: LoadOrdersComponent
+      },
+      {
+        path: 'insurance-companies',
+        component: InsuranceCompaniesComponent
       }
     ]
 
@@ -110,7 +120,7 @@ export const routes: Routes =
       },
       {
         path: 'orders',
-        component: OrdersComponent
+        component: PatientOrderComponent
       },
       {
         path: 'get-my-orders',
@@ -119,6 +129,10 @@ export const routes: Routes =
       {
         path: 'deliveries',
         component: PatientDeliveries
+      },
+      {
+        path: 'insurance',
+        component: InsuranceComponent
       }
     ]
   },
@@ -137,6 +151,28 @@ export const routes: Routes =
       {
         path: 'items',
         component: LoadDeliveriesComponent
+      }
+    ]
+  },
+  {
+    path: 'doctor',
+    runGuardsAndResolvers: 'always',
+    canActivate: [doctorGuard],
+    component: DoctorLayoutComponent,
+    children:
+    [
+      {
+        path: '',
+        redirectTo: 'orders',
+        pathMatch: 'full'
+      },
+      {
+        path: 'orders',
+        component: DoctorOrderComponent
+      },
+      {
+        path: 'my-orders',
+        component: MyOrdersComponent
       }
     ]
   },

@@ -61,6 +61,8 @@ export class GuestLayoutComponent implements OnInit {
       case 'Patient': this.router.navigateByUrl('/patient'); break;
 
       case 'Delivery': this.router.navigateByUrl('/delivery'); break;
+
+      case 'Doctor' : this.router.navigateByUrl('/doctor'); break;
     }
   }
 }

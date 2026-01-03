@@ -5,6 +5,8 @@ import { ToastrService } from "ngx-toastr";
 import { catchError, Observable, throwError } from "rxjs";
 import { ApiResponse } from "../Models/Interfaces/ApiResponse";
 
+// Task: make this interceptor support another status code message (ex: 200, 300)
+
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   const toastr = inject(ToastrService);

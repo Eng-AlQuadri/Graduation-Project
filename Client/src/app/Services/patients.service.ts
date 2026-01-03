@@ -38,6 +38,12 @@ export class PatientsService {
   }
 
 
+  getPatientsByDoctor(): Observable<ApiResponse<Patient[]>> {
+
+    return this.http.get<ApiResponse<Patient[]>>(this.baseUrl + 'patient/get-patients-by-doctor');
+  }
+
+
   getPatientInvoices(id: number, invoiceParams: InvoiceParams)  {
 
     let params = this.buildParams(invoiceParams);

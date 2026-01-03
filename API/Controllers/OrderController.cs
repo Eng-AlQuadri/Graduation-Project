@@ -47,11 +47,32 @@ public class OrderController : BaseApiController
         return StatusCode(response.StatusCode, response);
     }
 
+
+    [Authorize("RequireDoctorRole")]
+    [HttpPost("create-order-by-doctor")]
+    public async Task<IActionResult> CreateOrderByDoctor([FromForm] CreateOrderDtoByDoctor createOrderDto)
+    {
+        var response = await _orderService.CreateOrderByDoctor(createOrderDto);
+
+        return StatusCode(response.StatusCode, response);
+    }
+
+
     [Authorize("RequirePatientRole")]
     [HttpGet("get-my-orders")]
     public async Task<IActionResult> GetPatientOrders([FromQuery] OrderSpecParams orderSpecParams)
     {
         var response = await _orderService.GetOrdersByPatient(orderSpecParams);
+
+        return StatusCode(response.StatusCode, response);
+    }
+
+
+    [Authorize("RequireDoctorRole")]
+    [HttpGet("get-doctor-orders")]
+    public async Task<IActionResult> GetDoctorOrders([FromQuery] OrderSpecParams orderSpecParams)
+    {
+        var response = await _orderService.GetOrdersByDoctor(orderSpecParams);
 
         return StatusCode(response.StatusCode, response);
     }

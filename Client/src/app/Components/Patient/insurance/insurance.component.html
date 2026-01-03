@@ -1,0 +1,98 @@
+<div class="doctors fadeInDown">
+  <div class="doc-head">
+      <h2>My Insurance</h2>
+
+      @if (this.cards.length == 0) {
+        <button class="add-user" (click)="showCreateDialog()">
+          Add New Card
+        </button>
+      }
+
+  </div>
+  <div class="table">
+      <table class="animated fadeInDown">
+          <thead>
+              <th>ID</th>
+              <th>Card No</th>
+              <th>Company ID</th>
+              <th>Expiry Date</th>
+              <th>Details</th>
+          </thead>
+          <tbody class="tbody">
+            @if (cards.length != 0) {
+              @for (card of cards; track $index) {
+                <tr>
+                  <td>{{card.id}}</td>
+                  <td>{{card.cardNo}}</td>
+                  <td>{{card.companyId}}</td>
+                  <td>{{card.expiry | date:'yyyy-MM-dd'}}</td>
+                  <td>
+                    <button type="button" (click)="DeleteCard(card.id)">Delete</button>
+                  </td>
+                </tr>
+              }
+            } @else {
+              <tr>
+                <td colspan="8">No Cards</td>
+              </tr>
+            }
+
+          </tbody>
+      </table>
+  </div>
+</div>
+
+
+<form [formGroup]="createForm">
+  <p-dialog header="Add Company" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-8">Create Card Info</span>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="cardId" class="font-semibold w-24">Card ID</label>
+        <input
+          formControlName = "cardNo"
+          pInputText id="name"
+          class="flex-auto"
+          autocomplete="off"
+          name="cardId"
+          required
+          minlength="3"
+          maxlength="15"
+        />
+    </div>
+    <div *ngIf="this.createForm.get('cardNo')?.dirty && this.createForm.get('cardNo')?.invalid">
+      <small class="error-info" *ngIf="this.createForm.get('cardNo')?.hasError('required')">* Card No is required</small>
+    </div>
+    <div class="flex items-center gap-4 mb-8">
+      <label for="price" class="font-semibold w-24">Company</label>
+      <div class="selection">
+        <select formControlName="companyId" id='subjectDropdown' required >
+            <option value="">Select Company</option>
+            @for (company of companies; track $index) {
+              <option [ngValue]="company.id">{{company.companyName}}</option>
+            }
+        </select>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-4 mb-4">
+      <label for="expiryDate" class="font-semibold w-24">Expiry Date</label>
+      <input
+        formControlName = "expiry"
+        pInputText id="expiry"
+        class="flex-auto"
+        autocomplete="off"
+        name="expiry"
+        required
+        type="date"
+      />
+    </div>
+    <div *ngIf="this.createForm.get('expiryDate')?.dirty && this.createForm.get('expiry')?.invalid">
+      <small class="error-info" *ngIf="this.createForm.get('expiry')?.hasError('required')">* Expiry Date Required</small>
+    </div>
+
+    <div class="flex justify-end gap-2">
+      <p-button label="Cancel" severity="secondary" (click)="closeDialog()" />
+      <p-button label="Save" [disabled]="this.createForm.invalid || !this.createForm.dirty" (click)="createCard()" />
+    </div>
+  </p-dialog>
+</form>

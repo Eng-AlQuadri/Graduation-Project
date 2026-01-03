@@ -8,6 +8,8 @@ public interface IOrderService
 {
     public Task<ApiResponse> GetOrders(OrderSpecParams orderSpecParams);
     public Task<ApiResponse> GetOrdersByPatient(OrderSpecParams orderSpecParams);
+    public Task<ApiResponse> GetOrdersByDoctor(OrderSpecParams orderSpecParams);
     public Task<ApiResponse> CreateOrder(CreateOrderDto data);
+    public Task<ApiResponse> CreateOrderByDoctor(CreateOrderDtoByDoctor createOrderDto);
     public Task<ApiResponse> ApproveOrder(int orderId);
 }

@@ -225,6 +225,62 @@ namespace Infrastructure.Migrations
                     b.ToTable("Doctors", (string)null);
                 });
 
+            modelBuilder.Entity("Core.Entities.InsuranceCard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CardNo")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Expiry")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PatientName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId")
+                        .IsUnique();
+
+                    b.HasIndex("PatientId")
+                        .IsUnique();
+
+                    b.ToTable("InsuranceCards", (string)null);
+                });
+
+            modelBuilder.Entity("Core.Entities.InsuranceCompany", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InsuranceCompanies", (string)null);
+                });
+
             modelBuilder.Entity("Core.Entities.Invoice", b =>
                 {
                     b.Property<int>("Id")
@@ -328,6 +384,9 @@ namespace Infrastructure.Migrations
                     b.Property<bool?>("Approved")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<int?>("DoctorId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime(6)");
 
@@ -338,6 +397,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
 
                     b.HasIndex("PatientId");
 
@@ -640,6 +701,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("AppUser");
                 });
 
+            modelBuilder.Entity("Core.Entities.InsuranceCard", b =>
+                {
+                    b.HasOne("Core.Entities.InsuranceCompany", "InsuranceCompany")
+                        .WithOne("InsuranceCard")
+                        .HasForeignKey("Core.Entities.InsuranceCard", "CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.PatientUser", "Patient")
+                        .WithOne("InsuranceCard")
+                        .HasForeignKey("Core.Entities.InsuranceCard", "PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InsuranceCompany");
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("Core.Entities.Invoice", b =>
                 {
                     b.HasOne("Core.Entities.PatientUser", "Patient")
@@ -682,11 +762,17 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Entities.Order", b =>
                 {
+                    b.HasOne("Core.Entities.DoctorUser", "Doctor")
+                        .WithMany("Orders")
+                        .HasForeignKey("DoctorId");
+
                     b.HasOne("Core.Entities.PatientUser", "Patient")
                         .WithMany("Orders")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Doctor");
 
                     b.Navigation("Patient");
                 });
@@ -815,6 +901,16 @@ namespace Infrastructure.Migrations
                     b.Navigation("Deliveries");
                 });
 
+            modelBuilder.Entity("Core.Entities.DoctorUser", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("Core.Entities.InsuranceCompany", b =>
+                {
+                    b.Navigation("InsuranceCard");
+                });
+
             modelBuilder.Entity("Core.Entities.Invoice", b =>
                 {
                     b.Navigation("InvoiceDetails");
@@ -839,6 +935,9 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entities.PatientUser", b =>
                 {
                     b.Navigation("Deliveries");
+
+                    b.Navigation("InsuranceCard")
+                        .IsRequired();
 
                     b.Navigation("Invoices");
 

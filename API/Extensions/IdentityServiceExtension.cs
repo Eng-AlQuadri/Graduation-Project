@@ -70,7 +70,7 @@ public static class IdentityServiceExtension
             .AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"))
             .AddPolicy("RequirePatientRole", policy => policy.RequireRole(["Patient", "Admin"]))
             .AddPolicy("RequireDoctorRole", policy => policy.RequireRole(["Doctor", "Admin"]))
-            .AddPolicy("RequireDeliveryRole", policy => policy.RequireRole("Delivery"));
+            .AddPolicy("RequireDeliveryRole", policy => policy.RequireRole(["Delivery", "Admin"]));
 
         return services;
     }

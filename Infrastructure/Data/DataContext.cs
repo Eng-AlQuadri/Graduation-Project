@@ -16,6 +16,8 @@ public class DataContext : IdentityDbContext<AppUser, AppRole, int,
     public DbSet<SupplierUser> Suppliers { get; set; }
     public DbSet<PatientUser> Patients { get; set; }
     public DbSet<DoctorUser> Doctors { get; set; }
+    public DbSet<InsuranceCard> InsuranceCards { get; set; }
+    public DbSet<InsuranceCompany> InsuranceCompanies { get; set; }
     public DbSet<DeliveryUser> DeliveryUsers { get; set; }
     public DbSet<AdminUser> Admins { get; set; }
     public DbSet<Delivery> Deliveries { get; set; }

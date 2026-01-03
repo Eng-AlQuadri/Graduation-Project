@@ -115,6 +115,16 @@ public class PatientService : BaseService, IPatientService
     }
 
 
+    public async Task<ApiResponse> GetPatientsByDoctor()
+    {
+        var spec = PatientSpecification.GetAllPatientsByDoctor();
+
+        var data = await _unitOfWork.Repository<PatientUser>().ListAsync(spec);
+
+        return Response(true, 200, null, _mapper.Map<List<PatientDto>>(data));
+    }
+
+
     public async Task<ApiResponse> UpdateMyProfile(UpdatePatientDto updatePatientDto)
     {
         var patient = await _unitOfWork.Repository<PatientUser>()

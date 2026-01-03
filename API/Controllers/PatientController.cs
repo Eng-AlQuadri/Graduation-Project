@@ -27,6 +27,16 @@ public class PatientController : BaseApiController
     }
 
 
+    [Authorize(Policy = "RequireDoctorRole")]
+    [HttpGet("get-patients-by-doctor")]
+    public async Task<IActionResult> GetPatientsByDoctor()
+    {
+        var response = await _patientService.GetPatientsByDoctor();
+
+        return StatusCode(response.StatusCode, response);
+    }
+
+
     [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("get-patient/{id}")]
     public async Task<IActionResult> GetPatient(int id)

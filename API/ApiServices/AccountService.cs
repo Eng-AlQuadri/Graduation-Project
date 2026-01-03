@@ -132,7 +132,7 @@ public class AccountService : BaseService, IAccountService
 
         if (!createResult.Succeeded)
         {
-            return Response(false, 400, null, createResult.Errors);
+            return Response(false, 400, null, createResult.Errors);// this is the end 
         }
 
         var roleResult = await AssignRoleAsync(user, "Patient");

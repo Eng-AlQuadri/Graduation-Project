@@ -38,6 +38,10 @@ public static class ApplicationServiceExtension
 
         services.AddScoped<IPurchaseService, PurchaseService>();
 
+        services.AddScoped<ICardService, CardService>();
+
+        services.AddScoped<IInsuranceCompanyService, InsuranceCompanyService>();
+
         services.AddScoped<LogUserActivity>();
 
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

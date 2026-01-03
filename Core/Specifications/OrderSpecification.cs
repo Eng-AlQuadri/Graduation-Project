@@ -51,4 +51,19 @@ public class OrderSpecification : BaseSpecefication<Order>
 
         return spec;
     }
+
+    public static OrderSpecification GetAllOrdersByDoctor(OrderSpecParams orderSpecParams, int doctorId)
+    { 
+        var spec = new OrderSpecification(x => x.DoctorId == doctorId);
+
+        spec.ApplyPaging(orderSpecParams.PageSize * (orderSpecParams.PageIndex - 1), orderSpecParams.PageSize);
+
+        spec.AddInclude(x => x.OrderDetails);
+
+        spec.AddInclude("OrderDetails.Medicine");
+
+        spec.AddInclude(x => x.Patient.AppUser);
+
+        return spec;
+    }
 }

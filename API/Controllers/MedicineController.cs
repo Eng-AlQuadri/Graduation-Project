@@ -59,7 +59,7 @@ public class MedicineController : BaseApiController
     }
 
 
-    [Authorize(Policy = "RequirePatientRole")]
+    [Authorize(Roles = "Patient,Doctor,Admin")]
     [HttpGet("all-medicines")]
     public async Task<IActionResult> GetAllMedicines()
     {

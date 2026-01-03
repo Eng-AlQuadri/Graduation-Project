@@ -44,9 +44,22 @@ export class OrdersService {
   }
 
 
-  createOrder(formData: FormData){
+  getDoctorOrders(orderParams: OrderParams): Observable<ApiResponse<Pagination<Orders>>> {
+
+      let params = this.buildParams(orderParams);
+
+      return this.http.get<ApiResponse<Pagination<Orders>>>(this.baseUrl + 'order/get-doctor-orders', {params});
+  }
+
+
+  createOrder(formData: FormData) {
 
     return this.http.post(this.baseUrl + 'order/create-order', formData);
+  }
+
+  createOrderFromDoctor(formData: FormData) {
+
+    return this.http.post(this.baseUrl + 'order/create-order-by-doctor', formData);
   }
 
 
