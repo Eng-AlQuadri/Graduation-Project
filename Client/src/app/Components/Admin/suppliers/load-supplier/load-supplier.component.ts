@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Purchase } from '../../../../Models/Interfaces/Purchase';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -10,13 +10,14 @@ import { FormsModule } from '@angular/forms';
   [
     FormsModule,
     CommonModule,
+    DatePipe
   ],
   templateUrl: './load-supplier.component.html',
   styleUrl: './load-supplier.component.css'
 })
 export class LoadSupplierComponent implements OnInit {
 
-  purchases: Purchase[] = []
+  purchases: Purchase[] = [];
 
   supplierId!: number;
 
@@ -24,7 +25,7 @@ export class LoadSupplierComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      this.purchases = data['supplier'];
+      this.purchases = data['supplier'].data.items;
     })
 
     this.route.params.subscribe(data => {
