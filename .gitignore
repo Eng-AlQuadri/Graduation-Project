@@ -11,6 +11,8 @@
 *.sln.docstates
 
 # Build results
+obj
+bin
 API/bin/
 API/obj/
 Core/bin/

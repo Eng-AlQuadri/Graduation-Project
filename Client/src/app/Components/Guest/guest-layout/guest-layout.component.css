@@ -18,6 +18,17 @@
   box-shadow: 0 6px 10px #c0c0c0;
 }
 
+.center-buttons button{
+  margin: 0 !important;
+  display: block;
+  margin-top: 5px !important;
+}
+
+.center-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
 .signup-section form h2 {
   text-align: center;
 }

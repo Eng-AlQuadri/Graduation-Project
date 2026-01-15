@@ -14,7 +14,8 @@
           <thead>
               <th>ID</th>
               <th>Card No</th>
-              <th>Company ID</th>
+              <th>Company Name</th>
+              <th>Discount</th>
               <th>Expiry Date</th>
               <th>Details</th>
           </thead>
@@ -24,7 +25,8 @@
                 <tr>
                   <td>{{card.id}}</td>
                   <td>{{card.cardNo}}</td>
-                  <td>{{card.companyId}}</td>
+                  <td>{{card.companyName}}</td>
+                  <td>{{card.discount}}%</td>
                   <td>{{card.expiry | date:'yyyy-MM-dd'}}</td>
                   <td>
                     <button type="button" (click)="DeleteCard(card.id)">Delete</button>
@@ -33,7 +35,7 @@
               }
             } @else {
               <tr>
-                <td colspan="8">No Cards</td>
+                <td colspan="6">No Cards</td>
               </tr>
             }
 

@@ -62,7 +62,9 @@ public class CardService : BaseService, ICardService
 
     public async Task<ApiResponse> GetCards()
     {
-        var data = await _unitOfWork.Repository<InsuranceCard>().ListAllAsync();
+        var spec = CardSpecification.GetCards();
+
+        var data = await _unitOfWork.Repository<InsuranceCard>().ListAsync(spec);
 
         return Response(true, 200, null, _mapper.Map<List<CardDto>>(data));
     }

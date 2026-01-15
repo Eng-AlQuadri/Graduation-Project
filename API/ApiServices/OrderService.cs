@@ -254,7 +254,7 @@ public class OrderService : BaseService, IOrderService
     {
         var workers = await _unitOfWork.Repository<DeliveryUser>().ListAllAsync();
 
-        if (!workers.Any()) throw new Exception("No delivery worker availabel");
+        if (!workers.Any()) throw new Exception("No delivery worker available");
 
         var totalDeliveries = await _unitOfWork.Repository<Delivery>().CountAsync();
 

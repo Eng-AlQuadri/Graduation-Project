@@ -13,6 +13,7 @@
               <th>Total Price</th>
               <th>Prescription</th>
               <th>Details</th>
+              <th>Payment</th>
           </thead>
           <tbody class="tbody">
             @if (orders.length != 0) {
@@ -28,6 +29,14 @@
                   <td>
                     <button type="button" (click)="ShowDetails(order.id)">Details</button>
                   </td>
+                  <td>
+                    @if(order.approved) {
+                      <button type="button" (click)="showPayDialog()">Pay</button>
+                    }
+                    @else {
+                      Not Approved
+                    }
+                  </td>
                 </tr>
               }
             } @else {
@@ -35,7 +44,6 @@
                 <td colspan="8">No Orders</td>
               </tr>
             }
-
           </tbody>
       </table>
   </div>
@@ -91,3 +99,64 @@
   </div>
 </p-dialog>
 
+
+<form [formGroup]="paymentForm">
+  <p-dialog header="Payment" [modal]="true" [(visible)]="PayDialogVisibility" [style]="{ width: '25rem' }">
+
+    <div class="flex items-center gap-4 mb-4">
+        <label for="cardNo" class="font-semibold w-24">Card No</label>
+        <input
+          formControlName="cardNo"
+          pInputText id="cardNo"
+          class="flex-auto"
+          autocomplete="off"
+          name="cardNo"
+          required
+        />
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="cvc" class="font-semibold w-24">CVC</label>
+        <input
+          formControlName="cvc"
+          pInputText id="cvc"
+          class="flex-auto"
+          autocomplete="off"
+          name="cvc"
+          required
+        />
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="cardHolderName" class="font-semibold w-24">Card Holder Name</label>
+        <input
+          formControlName="cardHolderName"
+          pInputText id="cardHolderName"
+          class="flex-auto"
+          autocomplete="off"
+          name="cardHolderName"
+          required
+        />
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="expDate" class="font-semibold w-24">Expiry Date</label>
+        <input
+          formControlName="expDate"
+          pInputText id="expDate"
+          class="flex-auto"
+          autocomplete="off"
+          name="expDate"
+          required
+          type="date"
+        />
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="expDate" class="font-semibold w-24">Total Price: ${{totalPriceBeforeDiscount}} </label>
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="expDate" class="font-semibold w-24">Price After Discount: ${{totalPrice}} </label>
+    </div>
+    <div class="flex justify-end gap-2">
+      <p-button label="Cancel" severity="secondary" (click)="closeDialog()" />
+      <p-button label="Pay"  (click)="pay()" />
+    </div>
+  </p-dialog>
+</form>

@@ -11,8 +11,11 @@ public class RegisterDto
     [Required]
     public string Password { get; set; } = null!;
 
-    [Compare("Password", ErrorMessage = "Passwords do not match")]
-    public string ConfirmPassword { get; set; } = null!;
+    // [Compare("Password", ErrorMessage = "Passwords do not match")]
+    [Required]
+    [StringLength(10, MinimumLength = 10)]
+    [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
+    public string PhoneNumber { get; set; } = null!;
 
     [Required]
     [StringLength(25, MinimumLength = 3, ErrorMessage ="Length between 3 and 25 characters")]

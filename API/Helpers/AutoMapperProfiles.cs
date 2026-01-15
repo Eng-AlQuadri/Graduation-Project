@@ -52,7 +52,9 @@ public class AutoMapperProfiles : Profile
 
 
         CreateMap<CreateCardDto, InsuranceCard>();
-        CreateMap<InsuranceCard, CardDto>();
+        CreateMap<InsuranceCard, CardDto>()
+            .ForMember(x => x.Discount, opt => opt.MapFrom(src => src.InsuranceCompany.Discount))
+            .ForMember(x => x.CompanyName, opt => opt.MapFrom(src => src.InsuranceCompany.CompanyName));
 
 
         CreateMap<Delivery, DeliveryDto>()

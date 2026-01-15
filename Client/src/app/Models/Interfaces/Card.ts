@@ -1,6 +1,7 @@
 export interface Card {
   id: number;
   cardNo: number;
-  companyId: number;
+  companyName: string;
+  discount: number;
   expiry: Date;
 }

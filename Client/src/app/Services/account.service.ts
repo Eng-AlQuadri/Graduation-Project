@@ -6,6 +6,7 @@ import { environment } from '../Environments/environment.development';
 import { loginData } from '../Models/Interfaces/LoginData';
 import { ApiResponse } from '../Models/Interfaces/ApiResponse';
 import { ToastrService } from 'ngx-toastr';
+import { Register } from '../Models/Interfaces/Register';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +25,24 @@ export class AccountService {
   baseUrl: string = environment.API_URL;
 
 
-  register() {
+  register(newPatient: Register) {
 
+    return this.http.post<ApiResponse<User>>(this.baseUrl + "account/register", newPatient).pipe(
+
+      map((response: ApiResponse<User>) => {
+
+        const user = response.data;
+
+        if (user) {
+
+          this.setCurrentUser(user);
+
+        }
+
+        return response;
+
+      })
+    )
   }
 
 

@@ -28,11 +28,27 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         'data' in apiResponse;
 
       if (isApiResponse) {
-        const { statusCode, message } = apiResponse;
+
+        const { statusCode, message, data } = apiResponse;
 
         switch (statusCode) {
+
           case 400:
-            toastr.error(message || 'Bad request');
+
+
+            if (Array.isArray(data) && data.length > 0) {
+
+              data.forEach(item => {
+
+                toastr.error(item.description);
+
+              })
+
+            } else {
+
+              toastr.error(message || 'Bad request');
+            }
+
             break;
 
           case 401:

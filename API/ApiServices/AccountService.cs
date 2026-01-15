@@ -132,7 +132,7 @@ public class AccountService : BaseService, IAccountService
 
         if (!createResult.Succeeded)
         {
-            return Response(false, 400, null, createResult.Errors);// this is the end 
+            return Response(false, 400, null, createResult.Errors);
         }
 
         var roleResult = await AssignRoleAsync(user, "Patient");
@@ -147,6 +147,16 @@ public class AccountService : BaseService, IAccountService
         var userDto = await CreateUserDto(user);
 
         var saved = await _unitOfWork.Complete();
+
+        var refreshToken = await _tokenService.GenerateRefreshToken(user.Id);
+
+        _httpContextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = false,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddDays(7)
+        });
 
         return saved
 
@@ -202,6 +212,8 @@ public class AccountService : BaseService, IAccountService
         user.UserName = registerDto.Username.ToLower();
 
         user.CreatedAt = DateTime.UtcNow;
+
+        user.PhoneNumber = registerDto.PhoneNumber;
 
         return user;
     }
