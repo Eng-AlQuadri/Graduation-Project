@@ -17,7 +17,9 @@ public class FileService
     {
         if (file is null || file.Length == 0) return null!;
 
-        var folderPath = Path.Combine(_env.WebRootPath, "prescriptions");
+        var rootPath = _env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot");
+
+        var folderPath = Path.Combine(rootPath, "prescriptions");
 
         if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
 

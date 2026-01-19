@@ -23,6 +23,7 @@ builder.Services.AddSignalR();
 
 builder.Services.AddCors();
 
+builder.WebHost.UseWebRoot("wwwroot");
 
 var app = builder.Build();
 
