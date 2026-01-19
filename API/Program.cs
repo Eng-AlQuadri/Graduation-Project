@@ -31,21 +31,37 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
 
-    try
-    {
-        var context = services.GetRequiredService<DataContext>();
-        var userManager = services.GetRequiredService<UserManager<AppUser>>();
-        var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
-        var unitOfWork = services.GetRequiredService<IUnitOfWork>();
+    var retries = 5;
 
-        await context.Database.MigrateAsync();
-        await Seeder.SeedUsers(userManager, roleManager, unitOfWork);
-    }
-    catch (Exception ex)
+    while(retries > 0)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
+        try
+        {
+            var context = services.GetRequiredService<DataContext>();
+            var userManager = services.GetRequiredService<UserManager<AppUser>>();
+            var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
+            var unitOfWork = services.GetRequiredService<IUnitOfWork>();
 
-        logger.LogError(ex, "An error occured while seeding database");
+            await context.Database.MigrateAsync();
+            await Seeder.SeedUsers(userManager, roleManager, unitOfWork);
+
+            retries = 0;
+        }
+        catch (MySqlConnector.MySqlException)
+        {
+            retries--;
+            await Task.Delay(5000); 
+        }
+        catch (Exception ex)
+        {
+            var logger = services.GetRequiredService<ILogger<Program>>();
+
+            logger.LogError(ex, "An error occured while seeding database");
+
+            retries--;
+
+            await Task.Delay(5000);
+        }
     }
 }
 
