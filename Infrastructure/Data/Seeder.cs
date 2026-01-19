@@ -12,15 +12,25 @@ public class Seeder
     public static async Task SeedUsers(UserManager<AppUser> userManager,
         RoleManager<AppRole> roleManager, IUnitOfWork unitOfWork)
     {
-        if (await userManager.Users.AnyAsync()) return;
+        // if (await userManager.Users.AnyAsync()) return;
 
-        var path = Path.Combine("..", "infrastructure", "Data", "UserSeedData.json");
+        // // var path = Path.Combine("..", "infrastructure", "Data", "UserSeedData.json");
 
-        var userData = await System.IO.File.ReadAllTextAsync(path);
+        // var basePath = Directory.GetCurrentDirectory();
 
-        var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
+        // var path = Path.Combine(
+        //     basePath,
+        //     "Infrastructure",
+        //     "Data",
+        //     "UserSeedData.json"
+        // );
+                
 
-        if (users is null) return;
+        // var userData = await System.IO.File.ReadAllTextAsync(path);
+
+        // var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
+
+        // if (users is null) return;
 
         var roles = new List<AppRole>
         {
@@ -36,27 +46,27 @@ public class Seeder
             await roleManager.CreateAsync(role);
         }
 
-        foreach (var user in users)
-        {
-            user.UserName = user.UserName!.ToLower();
+        // foreach (var user in users)
+        // {
+        //     user.UserName = user.UserName!.ToLower();
 
-            await userManager.CreateAsync(user,"Pa$$w0rd");
+        //     await userManager.CreateAsync(user,"Pa$$w0rd");
 
-            await userManager.AddToRoleAsync(user, "Patient");
+        //     await userManager.AddToRoleAsync(user, "Patient");
 
-            var patientUser = new PatientUser
-            {
-                Id = user.Id,
-                AppUserId = user.Id
-            };
+        //     var patientUser = new PatientUser
+        //     {
+        //         Id = user.Id,
+        //         AppUserId = user.Id
+        //     };
 
-            unitOfWork.Repository<PatientUser>().Add(patientUser);
-        }
+        //     unitOfWork.Repository<PatientUser>().Add(patientUser);
+        // }
 
         var adminAppUser = new AppUser
         {
             UserName = "admin",
-            Email = "admin@admin.com",
+            Email = "admin@pharmacy.com",
             PhoneNumber = "8556478965"
         };
 
@@ -72,6 +82,67 @@ public class Seeder
         };
 
         unitOfWork.Repository<AdminUser>().Add(admin);
+
+        var patientAppUser = new AppUser
+        {
+            UserName = "patient",
+            Email = "patient@pharmacy.com",
+            PhoneNumber = "8556478965"
+        };
+
+        await userManager.CreateAsync(patientAppUser, "Pa$$w0rd");
+        
+        await userManager.AddToRoleAsync(patientAppUser, "Patient");
+
+        var patient = new PatientUser
+        {
+            Id = patientAppUser.Id,
+            AppUserId = patientAppUser.Id,
+            AppUser = patientAppUser
+        };
+
+        unitOfWork.Repository<PatientUser>().Add(patient);
+
+        var doctorAppUser = new AppUser
+        {
+            UserName = "doctor one",
+            Email = "doctor1@pharmacy.com",
+            PhoneNumber = "8556478965"
+        };
+
+        await userManager.CreateAsync(doctorAppUser, "Pa$$w0rd");
+        
+        await userManager.AddToRoleAsync(doctorAppUser, "Doctor");
+
+        var doctor = new DoctorUser
+        {
+            Id = doctorAppUser.Id,
+            AppUserId = doctorAppUser.Id,
+            AppUser = doctorAppUser
+        };
+
+        unitOfWork.Repository<DoctorUser>().Add(doctor);
+
+
+        var deliveryAppUser = new AppUser
+        {
+            UserName = "delivery worker one",
+            Email = "delivery.worker1@pharmacy.com",
+            PhoneNumber = "8556478965"
+        };
+
+        await userManager.CreateAsync(deliveryAppUser, "Pa$$w0rd");
+        
+        await userManager.AddToRoleAsync(deliveryAppUser, "Delivery");
+
+        var delivery = new DeliveryUser
+        {
+            Id = deliveryAppUser.Id,
+            AppUserId = deliveryAppUser.Id,
+            AppUser = deliveryAppUser
+        };
+
+        unitOfWork.Repository<DeliveryUser>().Add(delivery);
 
 
         var supplierAppUser = new AppUser

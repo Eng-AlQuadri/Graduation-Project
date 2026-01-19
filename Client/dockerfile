@@ -1,0 +1,21 @@
+# ---------- Angular Development Container ----------
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy only package.json & package-lock.json first (caching)
+COPY Client/package*.json ./
+
+# Install dependencies and Angular CLI globally
+RUN npm install --force
+RUN npm install -g @angular/cli
+
+# Copy the rest of the client source code
+COPY Client/ .
+
+# Expose port for Angular dev server
+EXPOSE 4200
+
+# Run Angular dev server
+CMD ["ng", "serve", "--host", "0.0.0.0", "--port", "4200"]

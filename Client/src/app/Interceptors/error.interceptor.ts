@@ -46,7 +46,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
             } else {
 
-              toastr.error(message || 'Bad request');
+              toastr.error(message || data || 'Bad request');
             }
 
             break;

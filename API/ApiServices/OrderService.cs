@@ -195,10 +195,6 @@ public class OrderService : BaseService, IOrderService
 
         if (order is null) return Response(false, 400, null, "Order not found");
 
-        order.Approved = true;
-
-        order.ApprovalTime = DateTime.UtcNow;
-
         // handle storage and delivery and create invoice
 
         var invoice = new Invoice
@@ -241,6 +237,11 @@ public class OrderService : BaseService, IOrderService
         };
 
         _unitOfWork.Repository<Delivery>().Add(delivery);
+
+
+        order.Approved = true;
+
+        order.ApprovalTime = DateTime.UtcNow;
 
         var saved = await _unitOfWork.Complete();
 

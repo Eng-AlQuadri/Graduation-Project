@@ -1,0 +1,29 @@
+# ---------- Build stage ----------
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /GRADUATION-PROJECT
+
+# Copy solution
+COPY GraduationProject.sln ./
+
+# Copy folders into lowercase paths expected by the solution
+COPY API api
+COPY Core core
+COPY Infrastructure infrastructure
+
+# Restore solution (now paths match .sln)
+RUN dotnet restore GraduationProject.sln
+
+# Copy the rest of the code (if needed)
+COPY . .
+
+# Build and publish API project
+RUN dotnet publish api/API.csproj -c Release -o /app/publish
+
+# ---------- Runtime stage ----------
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+WORKDIR /app
+
+COPY --from=build /app/publish .
+
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "API.dll"]
